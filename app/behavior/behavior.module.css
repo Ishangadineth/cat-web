@@ -1,0 +1,72 @@
+.container {
+    padding: 10rem 10% 5rem;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.title span {
+    color: var(--primary);
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+.behaviorCard {
+    padding: 3rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    transition: all 0.3s ease;
+}
+
+.behaviorCard:hover {
+    background: var(--secondary);
+    border-color: var(--primary);
+}
+
+.behaviorCard h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+}
+
+.behaviorCard p {
+    color: var(--foreground);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.tip {
+    padding: 1.5rem;
+    background: rgba(248, 157, 44, 0.1);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 1rem 1rem 0;
+    color: var(--text-muted);
+}
+
+.tip strong {
+    color: var(--primary);
+}
+
+@media (max-width: 600px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

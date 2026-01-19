@@ -1,0 +1,168 @@
+.container {
+  min-height: 100vh;
+}
+
+.hero {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10%;
+  position: relative;
+  overflow: hidden;
+  gap: 4rem;
+}
+
+.heroContent {
+  flex: 1;
+  z-index: 2;
+}
+
+.title {
+  font-size: 4.5rem;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.highlight {
+  color: var(--primary);
+  display: block;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.primaryBtn {
+  padding: 1rem 2.5rem;
+  background: var(--primary);
+  border: none;
+  border-radius: 50px;
+  color: #000;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px var(--primary-glow);
+}
+
+.secondaryBtn {
+  padding: 1rem 2.5rem;
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.secondaryBtn:hover {
+  background: var(--glass-border);
+}
+
+.heroImgContainer {
+  flex: 1;
+  height: 70vh;
+  position: relative;
+  border-radius: 2rem;
+  overflow: hidden;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroImageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(10, 10, 11, 0.4), transparent);
+}
+
+.features {
+  padding: 10rem 10%;
+  background: var(--secondary);
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.sectionHeader h2 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  padding: 3rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--primary);
+  transform: translateY(-10px);
+}
+
+.card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+}
+
+.card p {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+  .hero {
+    flex-direction: column-reverse;
+    padding-top: 8rem;
+    height: auto;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .subtitle {
+    margin: 0 auto 2.5rem;
+  }
+
+  .ctaButtons {
+    justify-content: center;
+  }
+
+  .heroImgContainer {
+    width: 100%;
+    height: 40vh;
+  }
+}
