@@ -263,6 +263,72 @@ nav {
     border: 1px solid var(--border);
 }
 
+/* Tools Section Styles */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.5rem;
+}
+
+.tool-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    border-radius: 2.5rem;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.tool-card:hover {
+    border-color: var(--primary);
+    transform: scale(1.02);
+}
+
+.tool-card i {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.tool-input {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: #fff;
+    margin-bottom: 1rem;
+    font-family: inherit;
+}
+
+.tool-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary);
+    border: none;
+    border-radius: 12px;
+    color: #000;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.tool-btn:hover {
+    opacity: 0.9;
+    box-shadow: 0 10px 20px var(--primary-glow);
+}
+
+.result-area {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(248, 157, 44, 0.1);
+    border-radius: 12px;
+    min-height: 50px;
+    display: none;
+    color: var(--primary);
+    font-weight: 600;
+}
+
 /* Affiliate/Shop */
 .shop-grid {
     display: grid;
