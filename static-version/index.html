@@ -33,6 +33,10 @@
             <li><a href="#history">History</a></li>
             <li><a href="#breeds">Breeds</a></li>
             <li><a href="#tools">Tools</a></li>
+            <li><a href="#sounds">Sounds</a></li>
+            <li><a href="#health">Health</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#community">Community</a></li>
             <li><a href="#behavior">Behavior</a></li>
             <li><a href="#shop">Shop</a></li>
         </ul>
@@ -194,12 +198,103 @@
             </div>
         </section>
 
-        <!-- Adsterra Middle Spot -->
-        <div class="ad-container" data-aos="fade-up">
-            <div id="ad-mid-placeholder">
-                <p style="color: #444; font-size: 0.8rem;">[Adsterra Banner Ad 728x90 Code Here]</p>
+        <!-- Cat Sounds Section -->
+        <section id="sounds" style="background: #080808;">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Cat <span>Sounds</span></h2>
+                <p>Listen and learn the language of cats.</p>
             </div>
-        </div>
+            <div class="sound-board">
+                <button class="sound-btn" onclick="playSound('purr')" data-aos="zoom-in">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Purring</span>
+                </button>
+                <button class="sound-btn" onclick="playSound('meow')" data-aos="zoom-in" data-aos-delay="100">
+                    <i class="fas fa-comment"></i>
+                    <span>Classic Meow</span>
+                </button>
+                <button class="sound-btn" onclick="playSound('angry')" data-aos="zoom-in" data-aos-delay="200">
+                    <i class="fas fa-bolt"></i>
+                    <span>Angry Hiss</span>
+                </button>
+                <button class="sound-btn" onclick="playSound('kitten')" data-aos="zoom-in" data-aos-delay="300">
+                    <i class="fas fa-baby"></i>
+                    <span>Kitten Cry</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Symptom Checker Section -->
+        <section id="health">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Health <span>Symptom Checker</span></h2>
+                <p>A quick guide to potential cat illnesses. (Not a vet replacement)</p>
+            </div>
+            <div class="symptom-card" data-aos="fade-up">
+                <h3>What's wrong with your kitty?</h3>
+                <p style="color:var(--text-muted); margin-bottom: 2rem;">Select the main symptom you've noticed:</p>
+                <select id="symptom" class="symptom-select" onchange="checkHealth()">
+                    <option value="">-- Select Symptom --</option>
+                    <option value="appetite">Loss of Appetite</option>
+                    <option value="sneezing">Frequent Sneezing / Runny Nose</option>
+                    <option value="lethargy">Extreme Lethargy (Sleeping too much)</option>
+                    <option value="hairloss">Hair Loss or Constant Scratching</option>
+                    <option value="vomiting">Frequent Vomiting</option>
+                </select>
+                <div id="healthResult" class="result-area" style="padding: 2rem; background: rgba(255,255,255,0.05);">
+                </div>
+            </div>
+        </section>
+
+        <!-- Photo Gallery Section -->
+        <section id="gallery" style="background: #080808;">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Feline <span>Gallery</span></h2>
+                <p>Stunning captures of the world's most mysterious creatures.</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item" data-aos="zoom-in"><img
+                        src="https://images.unsplash.com/photo-1511044568932-338cba0ad803?q=80&w=2070&auto=format&fit=crop"
+                        alt="Cat 1"></div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100"><img
+                        src="https://images.unsplash.com/photo-1495360010541-f48722b34f7d?q=80&w=1936&auto=format&fit=crop"
+                        alt="Cat 2"></div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200"><img
+                        src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=2070&auto=format&fit=crop"
+                        alt="Cat 3"></div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300"><img
+                        src="https://images.unsplash.com/photo-1574158622682-e40e69881006?q=80&w=2033&auto=format&fit=crop"
+                        alt="Cat 4"></div>
+            </div>
+        </section>
+
+        <!-- Community Wall Section -->
+        <section id="community">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Community <span>Cat Wall</span></h2>
+                <p>Photos shared by cat lovers from around the world.</p>
+                <button class="btn-buy" style="margin-top: 2rem;"
+                    onclick="alert('Upload feature coming soon! (Sign up for updates)')">Submit Your Cat Photo</button>
+            </div>
+            <div class="community-feed">
+                <div class="feed-item" data-aos="fade-up">
+                    <img src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?q=80&w=1887&auto=format&fit=crop"
+                        class="feed-img">
+                    <div class="feed-info">
+                        <h3>Milo the Explorer</h3>
+                        <div class="user-tag"><i class="fas fa-user"></i> by @CatMom99</div>
+                    </div>
+                </div>
+                <div class="feed-item" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?q=80&w=1935&auto=format&fit=crop"
+                        class="feed-img">
+                    <div class="feed-info">
+                        <h3>Shadow in the Garden</h3>
+                        <div class="user-tag"><i class="fas fa-user"></i> by @KittyLover01</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Behavior Section -->
         <section id="behavior">
@@ -376,6 +471,31 @@
                 res.innerHTML = 'Not sure? Consult a vet. Try searching "Chocolate" or "Apple".';
             }
             res.style.display = 'block';
+        }
+
+        // New Logic
+        function playSound(type) {
+            alert(`Playing cat ${type} sound... (In real hosting, this will play an mp3 file)`);
+            // Example of how it would work:
+            // document.getElementById(`audio-${type}`).play();
+        }
+
+        function checkHealth() {
+            const symptom = document.getElementById('symptom').value;
+            const res = document.getElementById('healthResult');
+            const data = {
+                'appetite': 'Possible cause: Dental issues, Stress, or Digestive problems. If it lasts > 24h, see a vet.',
+                'sneezing': 'Possible cause: Feline Upper Respiratory Infection (Cat Flu) or Allergy.',
+                'lethargy': 'Possible cause: Infection, Fever, or Anemia. This is a serious sign if sudden.',
+                'hairloss': 'Possible cause: Fleas, Ear Mites, or Fungal infection (Ringworm).',
+                'vomiting': 'Possible cause: Hairballs, eating too fast, or more serious kidney/liver issues.'
+            };
+            if (symptom) {
+                res.innerHTML = `<strong>Analysis:</strong><br><p style="margin-top:1rem; color: #fff;">${data[symptom]}</p><br><em style="color:#ffcd39; font-size:0.8rem;">Note: This is for educational purposes only. Always consult a licensed veterinarian.</em>`;
+                res.style.display = 'block';
+            } else {
+                res.style.display = 'none';
+            }
         }
     </script>
 </body>
