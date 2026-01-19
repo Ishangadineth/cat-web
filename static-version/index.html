@@ -554,6 +554,30 @@
         </div>
     </footer>
 
+    <!-- AI Agent Interface -->
+    <div class="ai-chat-bubble" onclick="toggleChat()">
+        <i class="fas fa-robot"></i>
+    </div>
+
+    <div id="aiChatWindow" class="ai-chat-window">
+        <div class="ai-chat-header">
+            <h3><i class="fas fa-paw"></i> CatAI Assistant</h3>
+            <i class="fas fa-times" onclick="toggleChat()" style="cursor:pointer;"></i>
+        </div>
+        <div id="chatMessages" class="ai-chat-messages">
+            <div class="ai-msg bot">Hi there! I'm your CatAI Agent. 🐾 How can I help you with your feline friends
+                today?</div>
+        </div>
+        <div id="typing" class="typing-indicator" style="margin-left: 1.5rem;">CatAI is thinking...</div>
+        <div class="ai-chat-input-area">
+            <input type="text" id="userInput" class="ai-input" placeholder="Ask me anything about cats..."
+                onkeypress="handleKey(event)">
+            <button class="ai-send-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane" style="color:#000;"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- AOS Script -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
@@ -647,6 +671,55 @@
             } else {
                 res.style.display = 'none';
             }
+        }
+
+        // AI Agent Logic
+        function toggleChat() {
+            const win = document.getElementById('aiChatWindow');
+            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function handleKey(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            addMessage(msg, 'user');
+            input.value = '';
+
+            // Simulate AI Thinking
+            document.getElementById('typing').style.display = 'block';
+
+            setTimeout(() => {
+                document.getElementById('typing').style.display = 'none';
+                const response = getAIResponse(msg);
+                addMessage(response, 'bot');
+            }, 1500);
+        }
+
+        function addMessage(text, side) {
+            const chat = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `ai-msg ${side}`;
+            div.innerText = text;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function getAIResponse(query) {
+            query = query.toLowerCase();
+            if (query.includes('hello') || query.includes('hi')) return "Hello! I specialized in cat health, breeds, and behavior. What's on your mind?";
+            if (query.includes('food') || query.includes('eat')) return "Cats are obligate carnivores. They need taurine found in meat. Check our 'Can Cats Eat This?' tool for specifics!";
+            if (query.includes('health') || query.includes('sick')) return "I'm sorry to hear that. Our Symptom Checker can help, but please consult a vet if it's an emergency.";
+            if (query.includes('breed')) return "There are over 40 recognized breeds. Do you like longhair cats like Maine Coons or shorthair ones like Siamese?";
+            if (query.includes('training')) return "Patience is key! Cats respond best to positive reinforcement and treats. Have you checked our Training Guide?";
+            if (query.includes('who created') || query.includes('owner')) return "This amazing platform was created for cat lovers like you! 🐾";
+
+            return "That's interesting! While I'm still learning, I can tell you that cats have 32 muscles in each ear to help them pinpoint sounds. Ask me more about health or breeds!";
         }
     </script>
 </body>
