@@ -1,0 +1,822 @@
+<?php require_once 'config.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CatUniverse | The Ultimate Feline Guide</title>
+
+    <!-- Meta Tags for SEO -->
+    <meta name="description"
+        content="Explore the fascinating world of cats, from ancient history to modern breeds and behavior.">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- AOS Library for Animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">Cat<span>Universe</span></div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#history">History</a></li>
+            <li><a href="#breeds">Breeds</a></li>
+            <li><a href="#tools">Tools</a></li>
+            <li><a href="#training">Training</a></li>
+            <li><a href="#forum">Forum</a></li>
+            <li><a href="#sounds">Sounds</a></li>
+            <li><a href="#health">Health</a></li>
+            <li><a href="#vet-finder">Vet Finder</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#community">Community</a></li>
+            <li><a href="#behavior">Behavior</a></li>
+            <li><a href="#shop">Shop</a></li>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <li class="nav-auth"><a href="profile.php" class="btn-primary"
+                        style="padding: 0.5rem 1rem; font-size: 0.8rem; background: var(--primary); border-radius: 8px;"><i
+                            class="fas fa-user-circle"></i> Profile</a></li>
+                <li class="nav-auth"><a href="auth.php?logout=1" style="color: #f87171;"><i
+                            class="fas fa-sign-out-alt"></i></a></li>
+            <?php else: ?>
+                <li class="nav-auth"><a href="javascript:void(0)" onclick="openModal('loginModal')" class="btn-primary"
+                        style="padding: 0.5rem 1rem; font-size: 0.8rem; background: var(--primary); border-radius: 8px;">Login</a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content" data-aos="fade-right">
+                <span class="hero-badge">Curated for Cat Lovers</span>
+                <h1>Discover the <span>Majesty</span> of Cats</h1>
+                <p>Journey through 10,000 years of feline history, decode their mysterious behavior, and explore 300+
+                    unique breeds from around the world.</p>
+                <div class="cta-btns">
+                    <a href="#breeds" class="btn-buy">Explore Breeds</a>
+                </div>
+            </div>
+            <div class="hero-image-wrap" data-aos="zoom-in">
+                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=2043&auto=format&fit=crop"
+                    alt="Hero Cat" class="hero-image">
+            </div>
+        </section>
+
+        <!-- Adsterra Header Spot -->
+        <div class="ad-container" data-aos="fade-up">
+            <div id="ad-header-placeholder">
+                <p style="color: #444; font-size: 0.8rem;">[Adsterra Native Ad Code Here]</p>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <section id="history">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Cat <span>History</span></h2>
+                <p>From the temples of Egypt to modern-day icons.</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>🏺 10,000 BCE: The Taming</h3>
+                        <p>The first evidence of wildcats (Felis lybica) living near Neolithic human settlements in the
+                            Fertile Crescent.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>🐈‍⬛ 3,100 BCE: Egyptian Gods</h3>
+                        <p>In Ancient Egypt, cats were revered as divine entities and protectors, often mummified with
+                            their owners.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>🗺️ 500 BCE: Silk Road Expansion</h3>
+                        <p>Cats spread to Asia and Europe via trade routes, becoming valued for protecting grain stores
+                            from rodents.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Breeds Section -->
+        <section id="breeds" style="background: #080808;">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Purebred <span>Elegance</span></h2>
+                <p>Explore the diverse characteristics of the world's finest cat breeds.</p>
+            </div>
+
+            <div class="breeds-grid">
+                <!-- Breed 1 -->
+                <div class="breed-card" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?q=80&w=1887&auto=format&fit=crop"
+                        alt="Maine Coon" class="breed-img">
+                    <div class="breed-info">
+                        <span class="breed-tag">USA / Longhair</span>
+                        <h3>Maine Coon</h3>
+                        <p>Known as the 'Gentle Giant', these cats are intelligent, friendly, and possess a waterproof
+                            coat.</p>
+                    </div>
+                </div>
+
+                <!-- Breed 2 -->
+                <div class="breed-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1513245543132-31f507417b26?q=80&w=1935&auto=format&fit=crop"
+                        alt="Siamese" class="breed-img">
+                    <div class="breed-info">
+                        <span class="breed-tag">Thailand / Shorthair</span>
+                        <h3>Siamese Cat</h3>
+                        <p>Extremely vocal and social. Distinguished by their piercing blue eyes and pointed color coat.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Breed 3 -->
+                <div class="breed-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?q=80&w=1887&auto=format&fit=crop"
+                        alt="Persian" class="breed-img">
+                    <div class="breed-info">
+                        <span class="breed-tag">Iran / Longhair</span>
+                        <h3>Persian Cat</h3>
+                        <p>The epitome of luxury. Persian cats have sweet personalities and require high-maintenance
+                            grooming.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Tools Section -->
+        <section id="tools">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Cat <span>Universe</span> Tools</h2>
+                <p>Interactive utilities for every cat owner.</p>
+            </div>
+
+            <div class="tools-grid">
+                <!-- Name Generator -->
+                <div class="tool-card" data-aos="fade-up">
+                    <i class="fas fa-magic"></i>
+                    <h3>Cat Name Generator</h3>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Find the perfect name for your kitty.
+                    </p>
+                    <select id="catColor" class="tool-input">
+                        <option value="">Select Color</option>
+                        <option value="white">White</option>
+                        <option value="black">Black</option>
+                        <option value="ginger">Ginger/Orange</option>
+                        <option value="grey">Grey/Blue</option>
+                    </select>
+                    <button class="tool-btn" onclick="generateName()">Generate Name</button>
+                    <div id="nameResult" class="result-area"></div>
+                </div>
+
+                <!-- Age Calculator -->
+                <div class="tool-card" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-calculator"></i>
+                    <h3>Age Calculator</h3>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Convert cat years to human years.</p>
+                    <input type="number" id="catAge" class="tool-input" placeholder="Enter cat's real age (e.g. 2)">
+                    <button class="tool-btn" onclick="calculateAge()">Convert Now</button>
+                    <div id="ageResult" class="result-area"></div>
+                </div>
+
+                <!-- Food Checker -->
+                <div class="tool-card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Can Cats Eat This?</h3>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Quick safety check for common foods.</p>
+                    <input type="text" id="foodSearch" class="tool-input"
+                        placeholder="Type food (e.g. Chocolate, Milk)">
+                    <button class="tool-btn" onclick="checkFood()">Check Safety</button>
+                    <div id="foodResult" class="result-area"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cat Sounds Section -->
+        <section id="sounds" style="background: #080808;">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Cat <span>Sounds</span></h2>
+                <p>Listen and learn the language of cats.</p>
+            </div>
+            <div class="sound-board">
+                <button class="sound-btn" onclick="playSound('purr')" data-aos="zoom-in">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Purring</span>
+                </button>
+                <button class="sound-btn" onclick="playSound('meow')" data-aos="zoom-in" data-aos-delay="100">
+                    <i class="fas fa-comment"></i>
+                    <span>Classic Meow</span>
+                </button>
+                <button class="sound-btn" onclick="playSound('angry')" data-aos="zoom-in" data-aos-delay="200">
+                    <i class="fas fa-bolt"></i>
+                    <span>Angry Hiss</span>
+                </button>
+                <button class="sound-btn" onclick="playSound('kitten')" data-aos="zoom-in" data-aos-delay="300">
+                    <i class="fas fa-baby"></i>
+                    <span>Kitten Cry</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Symptom Checker Section -->
+        <section id="health">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Health <span>Symptom Checker</span></h2>
+                <p>A quick guide to potential cat illnesses. (Not a vet replacement)</p>
+            </div>
+            <div class="symptom-card" data-aos="fade-up">
+                <h3>What's wrong with your kitty?</h3>
+                <p style="color:var(--text-muted); margin-bottom: 2rem;">Select the main symptom you've noticed:</p>
+                <select id="symptom" class="symptom-select" onchange="checkHealth()">
+                    <option value="">-- Select Symptom --</option>
+                    <option value="appetite">Loss of Appetite</option>
+                    <option value="sneezing">Frequent Sneezing / Runny Nose</option>
+                    <option value="lethargy">Extreme Lethargy (Sleeping too much)</option>
+                    <option value="hairloss">Hair Loss or Constant Scratching</option>
+                    <option value="vomiting">Frequent Vomiting</option>
+                </select>
+                <div id="healthResult" class="result-area" style="padding: 2rem; background: rgba(255,255,255,0.05);">
+                </div>
+            </div>
+        </section>
+
+        <!-- Vet Finder Section -->
+        <section id="vet-finder">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Interactive <span>Vet Finder</span></h2>
+                <p>Find the best care for your cat nearby. Specializing in US & UK directories.</p>
+            </div>
+            <div class="map-container" data-aos="zoom-in">
+                <!-- Interactive Embed (Simulated Search for Vets) -->
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d158858.4734000267!2d-0.241681!3d51.528558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!2sveterinary%20near%20me!5e0!3m2!1sen!2slk!4v1705689123456!5m2!1sen!2slk"
+                    allowfullscreen="" loading="lazy"></iframe>
+            </div>
+            <div class="vet-links" data-aos="fade-up">
+                <p style="width: 100%; text-align: center; margin-bottom: 1.5rem; color: var(--text-muted);">Official
+                    US/UK Vet Directories:</p>
+                <a href="https://www.vets.org.uk/" class="vet-btn" target="_blank"><i class="fas fa-flag-uk"></i> Find
+                    UK Vets (RCVS)</a>
+                <a href="https://www.aaha.org/your-pet/hospital-locator/" class="vet-btn" target="_blank"><i
+                        class="fas fa-flag-usa"></i> AAHA Hospital Locator (USA)</a>
+                <a href="https://www.yelp.com/search?find_desc=Veterinarians" class="vet-btn" target="_blank"><i
+                        class="fas fa-search-location"></i> Search on Yelp</a>
+            </div>
+        </section>
+
+        <!-- Photo Gallery Section -->
+        <section id="gallery" style="background: #080808;">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Feline <span>Gallery</span></h2>
+                <p>Stunning captures of the world's most mysterious creatures.</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item" data-aos="zoom-in"><img
+                        src="https://images.unsplash.com/photo-1511044568932-338cba0ad803?q=80&w=2070&auto=format&fit=crop"
+                        alt="Cat 1"></div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100"><img
+                        src="https://images.unsplash.com/photo-1495360010541-f48722b34f7d?q=80&w=1936&auto=format&fit=crop"
+                        alt="Cat 2"></div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200"><img
+                        src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=2070&auto=format&fit=crop"
+                        alt="Cat 3"></div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300"><img
+                        src="https://images.unsplash.com/photo-1574158622682-e40e69881006?q=80&w=2033&auto=format&fit=crop"
+                        alt="Cat 4"></div>
+            </div>
+        </section>
+
+        <!-- Forum Section -->
+        <section id="forum">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Feline <span>Forum</span></h2>
+                <p>Discuss, share experiences, and get advice from the cat community.</p>
+            </div>
+
+            <div class="forum-container">
+                <div class="forum-categories" data-aos="fade-up">
+                    <div class="forum-cat active">All Topics</div>
+                    <div class="forum-cat">Health Advice</div>
+                    <div class="forum-cat">Food & Nutrition</div>
+                    <div class="forum-cat">Behavioral Questions</div>
+                    <div class="forum-cat">Cat Stories</div>
+                </div>
+
+                <div class="discussion-list" data-aos="fade-up">
+                    <!-- Topic 1 -->
+                    <a href="#" class="discussion-item">
+                        <div class="disc-info">
+                            <h4>"My cat won't eat wet food anymore, any tips?"</h4>
+                            <div class="disc-meta">
+                                <span><i class="fas fa-user"></i> Alex_Paws</span>
+                                <span><i class="fas fa-clock"></i> 2 hours ago</span>
+                                <span><i class="fas fa-tag"></i> Nutrition</span>
+                            </div>
+                        </div>
+                        <div class="disc-stats">
+                            <strong>24</strong><br>Replies
+                        </div>
+                    </a>
+
+                    <!-- Topic 2 -->
+                    <a href="#" class="discussion-item">
+                        <div class="disc-info">
+                            <h4>"Best ways to introduce a new kitten to an older cat?"</h4>
+                            <div class="disc-meta">
+                                <span><i class="fas fa-user"></i> SarahKittie</span>
+                                <span><i class="fas fa-clock"></i> 5 hours ago</span>
+                                <span><i class="fas fa-tag"></i> Behavior</span>
+                            </div>
+                        </div>
+                        <div class="disc-stats">
+                            <strong>18</strong><br>Replies
+                        </div>
+                    </a>
+
+                    <!-- Topic 3 -->
+                    <a href="#" class="discussion-item">
+                        <div class="disc-info">
+                            <h4>"Common signs of ear mites to look out for?"</h4>
+                            <div class="disc-meta">
+                                <span><i class="fas fa-user"></i> VetCare_Emily</span>
+                                <span><i class="fas fa-clock"></i> 1 day ago</span>
+                                <span><i class="fas fa-tag"></i> Health</span>
+                            </div>
+                        </div>
+                        <div class="disc-stats">
+                            <strong>42</strong><br>Replies
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Post Topic Form -->
+                <div class="post-form-card" data-aos="fade-up">
+                    <h3>Start a New Discussion</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem;">Share your question or story with thousands of cat owners.</p>
+                    <?php if(isset($_SESSION['user_id'])): ?>
+                        <form action="forum_action.php" method="POST">
+                            <input type="text" name="title" class="forum-input" placeholder="Topic title (e.g. My cat is sleeping too much)" required>
+                            <textarea name="content" class="forum-input" style="height: 150px;" placeholder="Describe your topic in detail..." required></textarea>
+                            <button type="submit" class="btn-buy">Post Topic</button>
+                        </form>
+                    <?php else: ?>
+                        <div style="background: rgba(255,107,38,0.1); padding: 2rem; border-radius: 1.5rem; text-align: center;">
+                            <p style="color: var(--primary); font-weight: 600;">Please Login to Participate in the Forum</p>
+                            <button class="btn-buy" style="margin-top: 1rem;" onclick="openModal('loginModal')">Login / Sign Up</button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Wall Section -->
+        <section id="community">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Community <span>Cat Wall</span></h2>
+                <p>Photos shared by cat lovers from around the world.</p>
+                <button class="btn-buy" style="margin-top: 2rem;"
+                    onclick="alert('Upload feature coming soon! (Sign up for updates)')">Submit Your Cat Photo</button>
+            </div>
+            <div class="community-feed">
+                <div class="feed-item" data-aos="fade-up">
+                    <img src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?q=80&w=1887&auto=format&fit=crop"
+                        class="feed-img">
+                    <div class="feed-info">
+                        <h3>Milo the Explorer</h3>
+                        <div class="user-tag"><i class="fas fa-user"></i> by @CatMom99</div>
+                    </div>
+                </div>
+                <div class="feed-item" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?q=80&w=1935&auto=format&fit=crop"
+                        class="feed-img">
+                    <div class="feed-info">
+                        <h3>Shadow in the Garden</h3>
+                        <div class="user-tag"><i class="fas fa-user"></i> by @KittyLover01</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Training Guide Section -->
+        <section id="training" style="background: #080808;">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Cat <span>Training</span> Secrets</h2>
+                <p>Simple steps to train your cat like a pro.</p>
+            </div>
+            <div class="training-grid">
+                <!-- Toilet Training -->
+                <div class="training-card" data-aos="fade-right">
+                    <i class="fas fa-toilet" style="font-size: 2rem; color: var(--primary); margin-bottom: 1.5rem;"></i>
+                    <h3>Toilet Training</h3>
+                    <p style="color: var(--text-muted);">Tired of the litter box? Here's how to transition to the
+                        toilet.</p>
+                    <ul class="step-list">
+                        <li><span>01</span> Get a seat transition kit (litter on toilet).</li>
+                        <li><span>02</span> Slowly reduce the amount of litter over weeks.</li>
+                        <li><span>03</span> Reward heavily with treats after every success.</li>
+                    </ul>
+                </div>
+                <!-- Trick Training -->
+                <div class="training-card" data-aos="fade-up">
+                    <i class="fas fa-magic" style="font-size: 2rem; color: var(--primary); margin-bottom: 1.5rem;"></i>
+                    <h3>"Sit" & "Shake"</h3>
+                    <p style="color: var(--text-muted);">Yes, cats can learn tricks too! Focus on positive
+                        reinforcement.</p>
+                    <ul class="step-list">
+                        <li><span>01</span> Wait for them to sit naturally.</li>
+                        <li><span>02</span> Say the word and give a high-value treat instantly.</li>
+                        <li><span>03</span> Repeat for 5 mins daily for consistent results.</li>
+                    </ul>
+                </div>
+                <!-- Leash Walking -->
+                <div class="training-card" data-aos="fade-left">
+                    <i class="fas fa-walking"
+                        style="font-size: 2rem; color: var(--primary); margin-bottom: 1.5rem;"></i>
+                    <h3>Harness Walking</h3>
+                    <p style="color: var(--text-muted);">Explore the outdoors safely with your feline friend.</p>
+                    <ul class="step-list">
+                        <li><span>01</span> Introduce the harness indoors first without a leash.</li>
+                        <li><span>02</span> Let them walk around the house wearing it.</li>
+                        <li><span>03</span> Gradually move to a quiet backyard or patio.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Behavior Section -->
+        <section id="behavior">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Behavior <span>Decoded</span></h2>
+                <p>Understanding the subtle language of your feline companion.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card" data-aos="fade-right">
+                    <i class="fas fa-heart" style="color: var(--primary); font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <h3>The Slow Blink</h3>
+                    <p>When a cat blinks slowly at you, it's a sign of extreme trust and affection. It's often called a
+                        'cat kiss'.</p>
+                </div>
+                <div class="card" data-aos="fade-up">
+                    <i class="fas fa-volume-up"
+                        style="color: var(--primary); font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <h3>The Purr Therapy</h3>
+                    <p>Cat purrs range between 25-150 Hertz. This frequency is medically proven to help heal bones and
+                        tissues.</p>
+                </div>
+                <div class="card" data-aos="fade-left">
+                    <i class="fas fa-bolt" style="color: var(--primary); font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <h3>The Zoomies</h3>
+                    <p>Frenetic Random Activity Periods (FRAPs) are natural bursts of energy cats use to burn off steam
+                        after sleeping.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Affiliate / Shop Section -->
+        <section id="shop" style="background: #080808;">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Feline <span>Essentials</span></h2>
+                <p>Premium products recommended for a happy, healthy cat.</p>
+            </div>
+
+            <div class="shop-grid">
+                <div class="product-card" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1545249390-6bdf99c59e7a?q=80&w=1888&auto=format&fit=crop"
+                        alt="Cat Tree" class="product-img">
+                    <h3>Multi-Level Cat Tower</h3>
+                    <p class="price">$149.99</p>
+                    <a href="#" class="btn-buy">Shop on Amazon <i class="fas fa-external-link-alt"></i></a>
+                </div>
+
+                <div class="product-card" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1591768793355-74d7c8626685?q=80&w=2070&auto=format&fit=crop"
+                        alt="Laser Toy" class="product-img">
+                    <h3>Interactive Laser Toy</h3>
+                    <p class="price">$19.50</p>
+                    <a href="#" class="btn-buy">Shop on Amazon <i class="fas fa-external-link-alt"></i></a>
+                </div>
+
+                <div class="product-card" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?q=80&w=1935&auto=format&fit=crop"
+                        alt="Cat Food" class="product-img">
+                    <h3>Organic Premium Food</h3>
+                    <p class="price">$45.00</p>
+                    <a href="#" class="btn-buy">Shop on Amazon <i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Adsterra Footer Spot -->
+        <div class="ad-container" data-aos="fade-up">
+            <div id="ad-footer-placeholder">
+                <p style="color: #444; font-size: 0.8rem;">[Adsterra Native Ad Footer Code Here]</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer style="padding: 6rem 10% 3rem; background: var(--background); border-top: 1px solid var(--border);">
+        <div
+            style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 4rem;">
+            <div style="max-width: 300px;">
+                <div class="logo" style="margin-bottom: 1.5rem;">Cat<span>Universe</span></div>
+                <p style="color: var(--text-muted);">The world's most comprehensive resource for cat enthusiasts,
+                    breeders, and owners.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1.5rem;">Quick Links</h4>
+                <ul style="list-style: none; color: var(--text-muted);">
+                    <li style="margin-bottom: 10px;"><a href="#history"
+                            style="color: inherit; text-decoration: none;">History</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#breeds"
+                            style="color: inherit; text-decoration: none;">Breeds</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#shop"
+                            style="color: inherit; text-decoration: none;">Shop</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1.5rem;">Follow Us</h4>
+                <div style="display: flex; gap: 1.5rem; font-size: 1.5rem;">
+                    <a href="#" style="color: var(--text-muted);"><i class="fab fa-facebook"></i></a>
+                    <a href="#" style="color: var(--text-muted);"><i class="fab fa-instagram"></i></a>
+                    <a href="#" style="color: var(--text-muted);"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div
+            style="text-align: center; margin-top: 6rem; padding-top: 2rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
+            &copy; 2026 CatUniverse. Created with ❤️ for Cats.
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('loginModal')">&times;</span>
+            <div class="auth-form">
+                <h2>Login <span>Paws</span></h2>
+                <form action="auth.php" method="POST">
+                    <input type="hidden" name="action" value="login">
+                    <div class="auth-input-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" class="auth-input" placeholder="Enter your email" required>
+                    </div>
+                    <div class="auth-input-group">
+                        <label>Password</label>
+                        <input type="password" name="password" class="auth-input" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Sign In</button>
+                    <div class="auth-switch">
+                        Don't have an account? <a href="javascript:void(0)"
+                            onclick="switchModal('loginModal', 'regModal')">Sign Up</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="regModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('regModal')">&times;</span>
+            <div class="auth-form">
+                <h2>Join the <span>Pack</span></h2>
+                <form action="auth.php" method="POST">
+                    <input type="hidden" name="action" value="register">
+                    <div class="auth-input-group">
+                        <label>Username</label>
+                        <input type="text" name="username" class="auth-input" placeholder="e.g. CatLover99" required>
+                    </div>
+                    <div class="auth-input-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" class="auth-input" placeholder="your@email.com" required>
+                    </div>
+                    <div class="auth-input-group">
+                        <label>Password</label>
+                        <input type="password" name="password" class="auth-input" placeholder="Min. 8 characters"
+                            required>
+                    </div>
+                    <button type="submit" class="auth-btn">Create Account</button>
+                    <div class="auth-switch">
+                        Already a member? <a href="javascript:void(0)"
+                            onclick="switchModal('regModal', 'loginModal')">Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Agent Interface -->
+    <div class="ai-chat-bubble" onclick="toggleChat()">
+        <i class="fas fa-robot"></i>
+    </div>
+
+    <div id="aiChatWindow" class="ai-chat-window">
+        <div class="ai-chat-header">
+            <h3><i class="fas fa-paw"></i> CatAI Assistant</h3>
+            <i class="fas fa-times" onclick="toggleChat()" style="cursor:pointer;"></i>
+        </div>
+        <div id="chatMessages" class="ai-chat-messages">
+            <div class="ai-msg bot">Hi there! I'm your CatAI Agent. 🐾 How can I help you with your feline friends
+                today?</div>
+        </div>
+        <div id="typing" class="typing-indicator" style="margin-left: 1.5rem;">CatAI is thinking...</div>
+        <div class="ai-chat-input-area">
+            <input type="text" id="userInput" class="ai-input" placeholder="Ask me anything about cats..."
+                onkeypress="handleKey(event)">
+            <button class="ai-send-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane" style="color:#000;"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Smooth Scrolling for Nav Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Interactive Tools Logic
+        function generateName() {
+            const color = document.getElementById('catColor').value;
+            const res = document.getElementById('nameResult');
+            const names = {
+                white: ['Snowball', 'Pearl', 'Casper', 'Luna', 'Yuki'],
+                black: ['Shadow', 'Midnight', 'Salem', 'Eclipse', 'Nyx'],
+                ginger: ['Simba', 'Leo', 'Ginger', 'Oliver', 'Milo'],
+                grey: ['Smokey', 'Misty', 'Ash', 'Gracie', 'Storm'],
+                '': ['Mittens', 'Coco', 'Bella', 'Simba', 'Lucky']
+            };
+            const list = names[color] || names[''];
+            const name = list[Math.floor(Math.random() * list.length)];
+            res.innerHTML = `Suggested Name: <span style="color:#fff">${name}</span>`;
+            res.style.display = 'block';
+        }
+
+        function calculateAge() {
+            const age = parseInt(document.getElementById('catAge').value);
+            const res = document.getElementById('ageResult');
+            if (isNaN(age)) return;
+            let humanAge = 0;
+            if (age === 1) humanAge = 15;
+            else if (age === 2) humanAge = 24;
+            else humanAge = 24 + (age - 2) * 4;
+            res.innerHTML = `Human Equivalent: <span style="color:#fff">${humanAge} Years Old</span>`;
+            res.style.display = 'block';
+        }
+
+        function checkFood() {
+            const food = document.getElementById('foodSearch').value.toLowerCase();
+            const res = document.getElementById('foodResult');
+            const data = {
+                'chocolate': { safe: false, msg: 'Highly Toxic! Can cause seizures.' },
+                'milk': { safe: false, msg: 'Most cats are lactose intolerant.' },
+                'apple': { safe: true, msg: 'Safe (but remove seeds).' },
+                'banana': { safe: true, msg: 'Safe in small quantities.' },
+                'onion': { safe: false, msg: 'Very Toxic! Damages red blood cells.' },
+                'garlic': { safe: false, msg: 'Extremely Toxic for cats!' },
+                'tuna': { safe: true, msg: 'Safe as a treat, but not every day.' },
+                'grapes': { safe: false, msg: 'Can cause kidney failure.' }
+            };
+            const found = data[food];
+            if (found) {
+                res.innerHTML = `<span style="color:${found.safe ? '#4ade80' : '#f87171'}">${found.safe ? 'SAFE' : 'TOXIC'}:</span> ${found.msg}`;
+            } else {
+                res.innerHTML = 'Not sure? Consult a vet. Try searching "Chocolate" or "Apple".';
+            }
+            res.style.display = 'block';
+        }
+
+        // New Logic
+        function playSound(type) {
+            alert(`Playing cat ${type} sound... (In real hosting, this will play an mp3 file)`);
+            // Example of how it would work:
+            // document.getElementById(`audio-${type}`).play();
+        }
+
+        function checkHealth() {
+            const symptom = document.getElementById('symptom').value;
+            const res = document.getElementById('healthResult');
+            const data = {
+                'appetite': 'Possible cause: Dental issues, Stress, or Digestive problems. If it lasts > 24h, see a vet.',
+                'sneezing': 'Possible cause: Feline Upper Respiratory Infection (Cat Flu) or Allergy.',
+                'lethargy': 'Possible cause: Infection, Fever, or Anemia. This is a serious sign if sudden.',
+                'hairloss': 'Possible cause: Fleas, Ear Mites, or Fungal infection (Ringworm).',
+                'vomiting': 'Possible cause: Hairballs, eating too fast, or more serious kidney/liver issues.'
+            };
+            if (symptom) {
+                res.innerHTML = `<strong>Analysis:</strong><br><p style="margin-top:1rem; color: #fff;">${data[symptom]}</p><br><em style="color:#ffcd39; font-size:0.8rem;">Note: This is for educational purposes only. Always consult a licensed veterinarian.</em>`;
+                res.style.display = 'block';
+            } else {
+                res.style.display = 'none';
+            }
+        }
+
+        // AI Agent Logic
+        function toggleChat() {
+            const win = document.getElementById('aiChatWindow');
+            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function handleKey(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            addMessage(msg, 'user');
+            input.value = '';
+
+            // Simulate AI Thinking
+            document.getElementById('typing').style.display = 'block';
+
+            setTimeout(() => {
+                document.getElementById('typing').style.display = 'none';
+                const response = getAIResponse(msg);
+                addMessage(response, 'bot');
+            }, 1500);
+        }
+
+        function addMessage(text, side) {
+            const chat = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `ai-msg ${side}`;
+            div.innerText = text;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function getAIResponse(query) {
+            query = query.toLowerCase();
+            if (query.includes('hello') || query.includes('hi')) return "Hello! I specialized in cat health, breeds, and behavior. What's on your mind?";
+            if (query.includes('food') || query.includes('eat')) return "Cats are obligate carnivores. They need taurine found in meat. Check our 'Can Cats Eat This?' tool for specifics!";
+            if (query.includes('health') || query.includes('sick')) return "I'm sorry to hear that. Our Symptom Checker can help, but please consult a vet if it's an emergency.";
+            if (query.includes('breed')) return "There are over 40 recognized breeds. Do you like longhair cats like Maine Coons or shorthair ones like Siamese?";
+            if (query.includes('training')) return "Patience is key! Cats respond best to positive reinforcement and treats. Have you checked our Training Guide?";
+            if (query.includes('who created') || query.includes('owner')) return "This amazing platform was created for cat lovers like you! 🐾";
+
+            return "That's interesting! While I'm still learning, I can tell you that cats have 32 muscles in each ear to help them pinpoint sounds. Ask me more about health or breeds!";
+        }
+
+        // Auth Modal Logic
+        function openModal(id) {
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function switchModal(oldId, newId) {
+            closeModal(oldId);
+            openModal(newId);
+        }
+
+        // Close modals on outside click
+        window.onclick = function (event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>
