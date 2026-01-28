@@ -1,0 +1,81 @@
+.container {
+    padding: 150px 2rem 60px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.authBox {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 4rem;
+    border-radius: 2rem;
+    width: 100%;
+    max-width: 450px;
+    backdrop-filter: blur(10px);
+}
+
+.authBox h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.authBox h1 span {
+    color: var(--primary);
+}
+
+.error {
+    color: #ff4d4d;
+    background: rgba(255, 77, 77, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.authBox form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.authBox input {
+    padding: 1rem 1.5rem;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.authBox input:focus {
+    border-color: var(--primary);
+}
+
+.submitBtn {
+    padding: 1rem;
+    background: var(--primary);
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.switch {
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.switch a {
+    color: var(--primary);
+    font-weight: 600;
+}

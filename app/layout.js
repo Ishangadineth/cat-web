@@ -1,41 +1,48 @@
 import "./globals.css";
 import { Outfit } from "next/font/google";
 import Script from "next/script";
+import { AuthProvider } from "@/context/AuthContext";
+import Navbar from "@/components/Navbar";
 
 const outfit = Outfit({ subsets: ["latin"] });
-
 export const metadata = {
-  title: "CatUniverse | Everything About Cats",
-  description: "Explore the fascinating world of cats, from history and breeds to behavior and premium products.",
+  title: "CatUniverse | The Ultimate Guide to Feline Royalty",
+  description: "Explore cat breeds, history, behavior, and health tips. The most comprehensive resource for cat lovers featuring a name generator, product guides, and more.",
+  keywords: "cats, cat breeds, cat behavior, cat health, cat history, cat name generator, cat supplies",
+  authors: [{ name: "CatUniverse Team" }],
+  openGraph: {
+    title: "CatUniverse | Everything About Cats",
+    description: "Your one-stop guide for everything feline.",
+    url: "https://catuniverse.com",
+    siteName: "CatUniverse",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={outfit.className}>
-        {/* Adsterra Script Placement - Example */}
-        <Script id="adsterra-script" strategy="afterInteractive">
-          {`
-            // Placeholder for Adsterra integration script
-            // console.log("Adsterra Script Ready");
-          `}
-        </Script>
-        <header className="main-header">
-          <nav className="nav-container">
-            <div className="logo">Cat<span>Universe</span></div>
-            <ul className="nav-links">
-              <li><a href="/">Home</a></li>
-              <li><a href="/history">History</a></li>
-              <li><a href="/breeds">Breeds</a></li>
-              <li><a href="/behavior">Behavior</a></li>
-              <li><a href="/shop">Shop</a></li>
-            </ul>
-          </nav>
-        </header>
-        <main>{children}</main>
-        <footer className="footer">
-          <p>&copy; 2026 CatUniverse. Crafted for Cat Lovers.</p>
-        </footer>
+        <AuthProvider>
+          <Script id="adsterra-script" strategy="afterInteractive">
+            {`
+              // Placeholder for Adsterra integration script
+            `}
+          </Script>
+          <Navbar />
+          <main>{children}</main>
+          <footer className="footer">
+            <p>&copy; 2026 CatUniverse. Crafted for Cat Lovers.</p>
+          </footer>
+        </AuthProvider>
       </body>
     </html>
   );

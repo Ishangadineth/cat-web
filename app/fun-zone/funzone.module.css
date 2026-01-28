@@ -1,0 +1,80 @@
+.container {
+    padding: 120px 2rem 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.title {
+    font-size: 3rem;
+    margin-bottom: 3rem;
+}
+
+.title span {
+    color: var(--primary);
+}
+
+.generatorBox {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 4rem 2rem;
+    border-radius: 3rem;
+    max-width: 600px;
+    margin: 0 auto;
+    backdrop-filter: blur(10px);
+}
+
+.label {
+    display: block;
+    margin-bottom: 1.5rem;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.inputField {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.inputField:focus {
+    border-color: var(--primary);
+}
+
+.generateBtn {
+    background: var(--primary);
+    color: #000;
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.generateBtn:hover {
+    transform: scale(1.05);
+    background: #ffa845;
+}
+
+.result {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(248, 157, 44, 0.1);
+    border-radius: 2rem;
+    border: 1px dashed var(--primary);
+}
+
+.result h2 {
+    color: var(--primary);
+    font-size: 2.5rem;
+    margin-top: 0.5rem;
+}

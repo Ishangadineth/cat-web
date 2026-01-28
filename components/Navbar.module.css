@@ -1,0 +1,98 @@
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(10, 10, 11, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.navContainer {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    text-decoration: none;
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+.navLinks {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    align-items: center;
+}
+
+.navLinks a {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.3s;
+    text-decoration: none;
+}
+
+.navLinks a:hover {
+    color: var(--primary);
+}
+
+.authLinks {
+    display: flex;
+    gap: 1rem;
+    margin-left: 1rem;
+}
+
+.profileBtn,
+.loginBtn {
+    padding: 0.5rem 1.2rem;
+    background: var(--primary);
+    color: #000 !important;
+    border-radius: 50px;
+    font-weight: 600 !important;
+}
+
+.logoutBtn {
+    background: none;
+    border: 1px solid var(--border);
+    color: #ff4d4d;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.mobileMenu {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.mobileMenu span {
+    width: 25px;
+    height: 2px;
+    background: #fff;
+}
+
+@media (max-width: 1024px) {
+    .navLinks {
+        display: none;
+    }
+
+    .mobileMenu {
+        display: flex;
+    }
+}
