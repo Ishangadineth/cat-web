@@ -19,22 +19,26 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
-                const userDocRef = doc(db, "users", firebaseUser.uid);
-                const userDoc = await getDoc(userDocRef);
+                try {
+                    const userDocRef = doc(db, "users", firebaseUser.uid);
+                    const userDoc = await getDoc(userDocRef);
 
-                if (userDoc.exists()) {
-                    setUser({ ...firebaseUser, ...userDoc.data() });
-                } else {
-                    // This handles cases where user logs in via social but no firestore doc exists yet
-                    const userData = {
-                        username: firebaseUser.displayName || firebaseUser.email.split('@')[0],
-                        email: firebaseUser.email,
-                        uid: firebaseUser.uid,
-                        avatar: firebaseUser.photoURL || null,
-                        createdAt: new Date().toISOString()
-                    };
-                    await setDoc(userDocRef, userData);
-                    setUser({ ...firebaseUser, ...userData });
+                    if (userDoc.exists()) {
+                        setUser({ ...firebaseUser, ...userDoc.data() });
+                    } else {
+                        const userData = {
+                            username: firebaseUser.displayName || (firebaseUser.email ? firebaseUser.email.split('@')[0] : 'User'),
+                            email: firebaseUser.email,
+                            uid: firebaseUser.uid,
+                            avatar: firebaseUser.photoURL || null,
+                            createdAt: new Date().toISOString()
+                        };
+                        await setDoc(userDocRef, userData);
+                        setUser({ ...firebaseUser, ...userData });
+                    }
+                } catch (error) {
+                    console.error("Error fetching/creating user doc:", error);
+                    setUser(firebaseUser); // Set basic user even if firestore fails
                 }
             } else {
                 setUser(null);
