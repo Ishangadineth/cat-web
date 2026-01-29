@@ -9,8 +9,14 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const { login, loginWithProvider } = useAuth();
+    const { user, login, loginWithProvider, loading } = useAuth();
     const router = useRouter();
+
+    // If user is already logged in, redirect to profile
+    if (!loading && user) {
+        if (typeof window !== "undefined") router.push("/profile");
+        return null;
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();

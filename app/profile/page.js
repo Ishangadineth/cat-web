@@ -8,9 +8,13 @@ import styles from "./profile.module.css";
 import { useRouter } from "next/navigation";
 
 export default function Profile() {
-    const { user, logout } = useAuth();
+    const { user, logout, loading } = useAuth();
     const [uploading, setUploading] = useState(false);
     const router = useRouter();
+
+    if (loading) {
+        return <div className={styles.container}><h1>Loading...</h1></div>;
+    }
 
     if (!user) {
         if (typeof window !== "undefined") router.push("/login");
