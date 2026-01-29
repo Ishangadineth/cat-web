@@ -79,3 +79,61 @@
     color: var(--primary);
     font-weight: 600;
 }
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 2rem 0;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border);
+}
+
+.divider:not(:empty)::before {
+    margin-right: 1.5rem;
+}
+
+.divider:not(:empty)::after {
+    margin-left: 1.5rem;
+}
+
+.socialContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.socialBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 0.8rem;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.socialBtn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--text-muted);
+    transform: translateY(-2px);
+}
+
+.socialBtn svg {
+    width: 20px;
+    height: 20px;
+}
