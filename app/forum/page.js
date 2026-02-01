@@ -13,6 +13,7 @@ export default function Forum() {
     const [posts, setPosts] = useState([]);
     const [newPost, setNewPost] = useState({ title: "", content: "" });
     const [images, setImages] = useState([]);
+    const [previews, setPreviews] = useState([]);
     const [uploading, setUploading] = useState(false);
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState(null);
@@ -37,17 +38,25 @@ export default function Forum() {
             alert("Maximum 5 images allowed per post.");
             return;
         }
-        setImages([...images, ...files]);
+
+        const newImages = [...images, ...files];
+        setImages(newImages);
+
+        // Generate previews
+        const newPreviews = files.map(file => URL.createObjectURL(file));
+        setPreviews([...previews, ...newPreviews]);
     };
 
     const removeImage = (index) => {
+        URL.revokeObjectURL(previews[index]);
         setImages(images.filter((_, i) => i !== index));
+        setPreviews(previews.filter((_, i) => i !== index));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!user) return alert("Please login first!");
-        if (!newPost.title) return alert("Please add a title!");
+        if (!newPost.title.trim()) return alert("Topic Title is required!");
         if (!newPost.content && images.length === 0) return alert("Please add some content or an image!");
 
         setUploading(true);
@@ -76,8 +85,12 @@ export default function Forum() {
                 isEdited: false,
                 reactions: { like: [], heart: [], haha: [], sad: [] }
             });
+
+            // Cleanup
+            previews.forEach(url => URL.revokeObjectURL(url));
             setNewPost({ title: "", content: "" });
             setImages([]);
+            setPreviews([]);
         } catch (err) {
             console.error(err);
             alert("Failed to post. Please try again.");
@@ -219,12 +232,12 @@ export default function Forum() {
                             onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
                         />
 
-                        {images.length > 0 && (
+                        {previews.length > 0 && (
                             <div className={styles.imagePreviews}>
-                                {images.map((img, idx) => (
+                                {previews.map((url, idx) => (
                                     <div key={idx} className={styles.previewItem}>
-                                        <span>{img.name}</span>
-                                        <button type="button" onClick={() => removeImage(idx)}>✕</button>
+                                        <img src={url} alt="Preview" className={styles.previewThumb} />
+                                        <button type="button" onClick={() => removeImage(idx)} className={styles.removePreview}>✕</button>
                                     </div>
                                 ))}
                             </div>
