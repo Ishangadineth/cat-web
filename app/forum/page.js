@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "firebase/firestore";
-import { motion, AnimatePresence } from "framer-motion";
+import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
+import { motion } from "framer-motion";
 import styles from "./forum.module.css";
 import Link from "next/link";
 import AdContainer from "@/components/AdContainer";
@@ -13,6 +13,8 @@ export default function Forum() {
     const [posts, setPosts] = useState([]);
     const [newPost, setNewPost] = useState({ title: "", content: "" });
     const [loading, setLoading] = useState(true);
+    const [editingId, setEditingId] = useState(null);
+    const [editContent, setEditContent] = useState("");
 
     useEffect(() => {
         const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
@@ -33,9 +35,75 @@ export default function Forum() {
                 ...newPost,
                 author: user.username,
                 authorId: user.uid,
-                createdAt: serverTimestamp()
+                createdAt: serverTimestamp(),
+                isEdited: false,
+                reactions: { like: [], heart: [], haha: [], sad: [] }
             });
             setNewPost({ title: "", content: "" });
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleReaction = async (postId, type) => {
+        if (!user) return alert("Please login to react!");
+        const postRef = doc(db, "posts", postId);
+        const post = posts.find(p => p.id === postId);
+        const currentReactions = post.reactions?.[type] || [];
+
+        const updateField = `reactions.${type}`;
+        if (currentReactions.includes(user.uid)) {
+            await updateDoc(postRef, { [updateField]: arrayRemove(user.uid) });
+        } else {
+            await updateDoc(postRef, { [updateField]: arrayUnion(user.uid) });
+        }
+    };
+
+    const handleEdit = (post) => {
+        setEditingId(post.id);
+        setEditContent(post.content);
+    };
+
+    const handleSaveEdit = async (postId) => {
+        try {
+            const postRef = doc(db, "posts", postId);
+            await updateDoc(postRef, {
+                content: editContent,
+                isEdited: true,
+                updatedAt: serverTimestamp()
+            });
+            setEditingId(null);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleShare = async (post) => {
+        const shareData = {
+            title: post.title,
+            text: post.content,
+            url: window.location.href
+        };
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                await navigator.clipboard.writeText(window.location.href);
+                alert("Link copied to clipboard!");
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleSavePost = async (postId) => {
+        if (!user) return alert("Please login to save posts!");
+        try {
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, {
+                savedPosts: arrayUnion(postId)
+            });
+            alert("Post saved to your profile!");
         } catch (err) {
             console.error(err);
         }
@@ -78,23 +146,66 @@ export default function Forum() {
             <div className={styles.postsGrid}>
                 {loading ? <p>Loading posts...</p> : (
                     posts.map((post, index) => (
-                        <>
+                        <div key={post.id}>
                             <motion.div
-                                key={post.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 className={styles.postCard}
                             >
                                 <div className={styles.postMeta}>
-                                    <span>@{post.author}</span>
-                                    <span>{post.createdAt?.toDate().toLocaleDateString()}</span>
+                                    <div className={styles.authorInfo}>
+                                        <span>@{post.author}</span>
+                                        {post.isEdited && <span className={styles.edited}>(edited)</span>}
+                                    </div>
+                                    <span>{post.createdAt?.toDate ? post.createdAt.toDate().toLocaleString() : 'Just now'}</span>
                                 </div>
+
                                 <h2>{post.title}</h2>
-                                <p>{post.content}</p>
+                                {editingId === post.id ? (
+                                    <div className={styles.editArea}>
+                                        <textarea
+                                            className={styles.editInput}
+                                            value={editContent}
+                                            onChange={(e) => setEditContent(e.target.value)}
+                                        />
+                                        <div className={styles.editControls}>
+                                            <button className={styles.saveBtn} onClick={() => handleSaveEdit(post.id)}>Save</button>
+                                            <button className={styles.cancelBtn} onClick={() => setEditingId(null)}>Cancel</button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <p>{post.content}</p>
+                                )}
+
+                                <div className={styles.actions}>
+                                    <div className={styles.reactions}>
+                                        <button className={`${styles.reaction} ${post.reactions?.like?.includes(user?.uid) ? styles.active : ''}`} onClick={() => handleReaction(post.id, 'like')}>
+                                            👍 <span>{post.reactions?.like?.length || 0}</span>
+                                        </button>
+                                        <button className={`${styles.reaction} ${post.reactions?.heart?.includes(user?.uid) ? styles.active : ''}`} onClick={() => handleReaction(post.id, 'heart')}>
+                                            ❤️ <span>{post.reactions?.heart?.length || 0}</span>
+                                        </button>
+                                        <button className={`${styles.reaction} ${post.reactions?.haha?.includes(user?.uid) ? styles.active : ''}`} onClick={() => handleReaction(post.id, 'haha')}>
+                                            😂 <span>{post.reactions?.haha?.length || 0}</span>
+                                        </button>
+                                        <button className={`${styles.reaction} ${post.reactions?.sad?.includes(user?.uid) ? styles.active : ''}`} onClick={() => handleReaction(post.id, 'sad')}>
+                                            😢 <span>{post.reactions?.sad?.length || 0}</span>
+                                        </button>
+                                    </div>
+
+                                    <div className={styles.interactionBtns}>
+                                        <button className={styles.actionBtn}>💬 Reply</button>
+                                        <button className={styles.actionBtn} onClick={() => handleShare(post)}>📤 Share</button>
+                                        <button className={styles.actionBtn} onClick={() => handleSavePost(post.id)}>🔖 Save</button>
+                                        {user?.uid === post.authorId && (
+                                            <button className={styles.editIconBtn} onClick={() => handleEdit(post)}>✏️ Edit</button>
+                                        )}
+                                    </div>
+                                </div>
                             </motion.div>
                             {/* Insert an ad every 3 posts */}
                             {index % 3 === 2 && <AdContainer type="banner-300-250" />}
-                        </>
+                        </div>
                     ))
                 )}
             </div>
