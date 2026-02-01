@@ -16,22 +16,22 @@ export default function Navbar() {
                 </Link>
 
                 <ul className={`${styles.navLinks} ${isMenuOpen ? styles.active : ''}`}>
-                    <li><Link href="/">Home</Link></li>
-                    <li><Link href="/forum">Forum</Link></li>
-                    <li><Link href="/history">History</Link></li>
-                    <li><Link href="/breeds">Breeds</Link></li>
-                    <li><Link href="/health">Health</Link></li>
-                    <li><Link href="/fun-zone">Fun Zone</Link></li>
-                    <li><Link href="/shop">Shop</Link></li>
+                    <li><Link href="/" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
+                    <li><Link href="/forum" onClick={() => setIsMenuOpen(false)}>Forum</Link></li>
+                    <li><Link href="/history" onClick={() => setIsMenuOpen(false)}>History</Link></li>
+                    <li><Link href="/breeds" onClick={() => setIsMenuOpen(false)}>Breeds</Link></li>
+                    <li><Link href="/health" onClick={() => setIsMenuOpen(false)}>Health</Link></li>
+                    <li><Link href="/fun-zone" onClick={() => setIsMenuOpen(false)}>Fun Zone</Link></li>
+                    <li><Link href="/shop" onClick={() => setIsMenuOpen(false)}>Shop</Link></li>
 
                     {user ? (
                         <li className={styles.authLinks}>
-                            <Link href="/profile" className={styles.profileBtn}>Profile</Link>
-                            <button onClick={logout} className={styles.logoutBtn}>Logout</button>
+                            <Link href="/profile" className={styles.profileBtn} onClick={() => setIsMenuOpen(false)}>Profile</Link>
+                            <button onClick={() => { logout(); setIsMenuOpen(false); }} className={styles.logoutBtn}>Logout</button>
                         </li>
                     ) : (
                         <li className={styles.authLinks}>
-                            <Link href="/login" className={styles.loginBtn}>Login</Link>
+                            <Link href="/login" className={styles.loginBtn} onClick={() => setIsMenuOpen(false)}>Login</Link>
                         </li>
                     )}
                 </ul>

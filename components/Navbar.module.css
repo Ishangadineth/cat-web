@@ -88,11 +88,40 @@
 }
 
 @media (max-width: 1024px) {
-    .navLinks {
-        display: none;
-    }
-
     .mobileMenu {
         display: flex;
+    }
+
+    .navLinks {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(10, 10, 11, 0.95);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 2rem;
+        gap: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        align-items: center;
+    }
+
+    .navLinks.active {
+        display: flex;
+    }
+
+    .authLinks {
+        margin-left: 0;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    }
+
+    .profileBtn,
+    .loginBtn,
+    .logoutBtn {
+        width: 100%;
+        text-align: center;
     }
 }
