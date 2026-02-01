@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { db } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, doc, updateDoc, orderBy, limit } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
@@ -11,6 +11,8 @@ export default function NotificationBell() {
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
+
+    const prevCountRef = useRef(0);
 
     useEffect(() => {
         if (!user) return;
@@ -29,7 +31,7 @@ export default function NotificationBell() {
             const newUnreadCount = notifs.filter(n => !n.read).length;
 
             // Notification Sound Logic
-            if (newUnreadCount > unreadCount) {
+            if (newUnreadCount > prevCountRef.current) {
                 const isSilent = user.notificationSettings?.silent;
                 const isMuted = user.notificationSettings?.mutedUntil?.toDate ? user.notificationSettings.mutedUntil.toDate() > new Date() : false;
 
@@ -40,10 +42,11 @@ export default function NotificationBell() {
             }
 
             setUnreadCount(newUnreadCount);
+            prevCountRef.current = newUnreadCount;
         });
 
         return () => unsubscribe();
-    }, [user, unreadCount]);
+    }, [user]);
 
     const markAsRead = async (id) => {
         try {
