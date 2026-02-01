@@ -16,6 +16,7 @@ export default function Forum() {
     const [editingId, setEditingId] = useState(null);
     const [editTitle, setEditTitle] = useState("");
     const [editContent, setEditContent] = useState("");
+    const [filter, setFilter] = useState("recent");
 
     useEffect(() => {
         const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
@@ -38,6 +39,7 @@ export default function Forum() {
                 authorId: user.uid,
                 createdAt: serverTimestamp(),
                 isEdited: false,
+                views: 0,
                 reactions: { like: [], heart: [], haha: [], sad: [] }
             });
             setNewPost({ title: "", content: "" });
@@ -45,6 +47,36 @@ export default function Forum() {
             console.error(err);
         }
     };
+
+    const handleView = async (postId) => {
+        try {
+            const postRef = doc(db, "posts", postId);
+            await updateDoc(postRef, {
+                views: (posts.find(p => p.id === postId)?.views || 0) + 1
+            });
+        } catch (err) {
+            console.error("View increment error:", err);
+        }
+    };
+
+    const sortedPosts = [...posts].sort((a, b) => {
+        if (filter === "top") {
+            const getReactions = (p) => Object.values(p.reactions || {}).reduce((acc, curr) => acc + curr.length, 0);
+            return getReactions(b) - getReactions(a);
+        }
+        if (filter === "views") {
+            return (b.views || 0) - (a.views || 0);
+        }
+        if (filter === "longest") {
+            return (b.content?.length || 0) - (a.content?.length || 0);
+        }
+        if (filter === "recent") {
+            const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(0);
+            const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(0);
+            return dateB - dateA;
+        }
+        return 0;
+    });
 
     const handleReaction = async (postId, type) => {
         if (!user) return alert("Please login to react!");
@@ -168,19 +200,48 @@ export default function Forum() {
 
             <AdContainer type="native" />
 
+            <div className={styles.filterBar}>
+                <button
+                    className={`${styles.filterBtn} ${filter === 'recent' ? styles.active : ''}`}
+                    onClick={() => setFilter('recent')}
+                >
+                    Most Recent
+                </button>
+                <button
+                    className={`${styles.filterBtn} ${filter === 'top' ? styles.active : ''}`}
+                    onClick={() => setFilter('top')}
+                >
+                    Top Rated
+                </button>
+                <button
+                    className={`${styles.filterBtn} ${filter === 'views' ? styles.active : ''}`}
+                    onClick={() => setFilter('views')}
+                >
+                    Most Viewed
+                </button>
+                <button
+                    className={`${styles.filterBtn} ${filter === 'longest' ? styles.active : ''}`}
+                    onClick={() => setFilter('longest')}
+                >
+                    Longest
+                </button>
+            </div>
+
             <div className={styles.postsGrid}>
                 {loading ? <p>Loading posts...</p> : (
-                    posts.map((post, index) => (
+                    sortedPosts.map((post, index) => (
                         <div key={post.id}>
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 className={styles.postCard}
+                                onClick={() => handleView(post.id)}
                             >
                                 <div className={styles.postMeta}>
                                     <div className={styles.authorInfo}>
                                         <span>@{post.author}</span>
                                         {post.isEdited && <span className={styles.edited}>(edited)</span>}
+                                        <span className={styles.viewCount}>👁️ {post.views || 0} views</span>
                                     </div>
                                     <span>{post.createdAt?.toDate ? post.createdAt.toDate().toLocaleString() : 'Just now'}</span>
                                 </div>

@@ -77,6 +77,44 @@
     cursor: pointer;
 }
 
+.filterBar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filterBtn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+    font-size: 0.9rem;
+}
+
+.filterBtn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.filterBtn.active {
+    background: rgba(248, 157, 44, 0.1);
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 0 15px rgba(248, 157, 44, 0.15);
+}
+
+.viewCount {
+    margin-left: 1rem;
+    opacity: 0.6;
+    font-size: 0.75rem;
+}
+
 .postsGrid {
     display: flex;
     flex-direction: column;
