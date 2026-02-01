@@ -2,7 +2,7 @@
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
-import { doc, updateDoc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { doc, updateDoc, getDoc, collection, query, where, getDocs, arrayRemove, orderBy } from "firebase/firestore";
 import styles from "./profile.module.css";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -44,13 +44,18 @@ export default function Profile() {
         setLoadingPosts(true);
         try {
             const postsRef = collection(db, "posts");
-            const q = query(
-                postsRef,
-                where("authorId", "==", user.uid),
-                orderBy("createdAt", sortBy === "newest" ? "desc" : "asc")
-            );
+            // Simple query without orderBy to avoid index requirement
+            const q = query(postsRef, where("authorId", "==", user.uid));
             const querySnapshot = await getDocs(q);
-            const posts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            let posts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // Sort in memory
+            posts.sort((a, b) => {
+                const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(0);
+                const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(0);
+                return sortBy === "newest" ? dateB - dateA : dateA - dateB;
+            });
+
             setUserPosts(posts);
 
             // Calculate total reactions
@@ -67,6 +72,20 @@ export default function Profile() {
             console.error("Error fetching user posts:", err);
         } finally {
             setLoadingPosts(false);
+        }
+    };
+
+    const handleUnsave = async (e, postId) => {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, {
+                savedPosts: arrayRemove(postId)
+            });
+            // Result will sync via AuthContext listener
+        } catch (err) {
+            console.error("Unsave error:", err);
         }
     };
 
@@ -171,10 +190,15 @@ export default function Profile() {
                         {loadingSaved ? <p>Loading saved content...</p> : (
                             <div className={styles.savedGrid}>
                                 {savedPosts.length > 0 ? savedPosts.map(post => (
-                                    <Link href="/forum" key={post.id} className={styles.savedItem}>
-                                        <h3>{post.title}</h3>
-                                        <p>by @{post.author}</p>
-                                    </Link>
+                                    <div key={post.id} className={styles.savedWrapper}>
+                                        <Link href="/forum" className={styles.savedItem}>
+                                            <h3>{post.title}</h3>
+                                            <p>by @{post.author}</p>
+                                        </Link>
+                                        <button className={styles.unsaveBtn} onClick={(e) => handleUnsave(e, post.id)}>
+                                            ❌
+                                        </button>
+                                    </div>
                                 )) : (
                                     <p className={styles.noData}>No saved posts yet.</p>
                                 )}

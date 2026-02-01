@@ -123,10 +123,12 @@ export default function Forum() {
         if (!user) return alert("Please login to save posts!");
         try {
             const userRef = doc(db, "users", user.uid);
+            const isSaved = user.savedPosts?.includes(postId);
+
             await updateDoc(userRef, {
-                savedPosts: arrayUnion(postId)
+                savedPosts: isSaved ? arrayRemove(postId) : arrayUnion(postId)
             });
-            alert("Post saved to your profile!");
+            alert(isSaved ? "Post removed from saves." : "Post saved to your profile!");
         } catch (err) {
             console.error(err);
         }
@@ -228,7 +230,9 @@ export default function Forum() {
                                     <div className={styles.interactionBtns}>
                                         <button className={styles.actionBtn}>💬 Reply</button>
                                         <button className={styles.actionBtn} onClick={() => handleShare(post)}>📤 Share</button>
-                                        <button className={styles.actionBtn} onClick={() => handleSavePost(post.id)}>🔖 Save</button>
+                                        <button className={styles.actionBtn} onClick={() => handleSavePost(post.id)}>
+                                            {user?.savedPosts?.includes(post.id) ? "🔖 Saved" : "🔖 Save"}
+                                        </button>
                                         {user?.uid === post.authorId && (
                                             <>
                                                 <button className={styles.editIconBtn} onClick={() => handleEdit(post)}>✏️ Edit</button>
