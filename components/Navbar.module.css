@@ -72,6 +72,12 @@
     font-size: 0.9rem;
 }
 
+.navActions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
 .mobileMenu {
     display: none;
     flex-direction: column;

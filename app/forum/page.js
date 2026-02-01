@@ -365,13 +365,15 @@ export default function Forum() {
                                         {post.isEdited && <span className={styles.edited}>(edited)</span>}
                                     </div>
                                     <div className={styles.postSettings}>
-                                        <button
-                                            className={`${styles.notifToggle} ${post.notificationSettings?.[user?.uid] !== false ? styles.active : ''}`}
-                                            onClick={() => togglePostNotifications(post.id, post.notificationSettings?.[user?.uid] !== false)}
-                                            title="Toggle Notifications"
-                                        >
-                                            {post.notificationSettings?.[user?.uid] !== false ? "🔔" : "🔕"}
-                                        </button>
+                                        {user?.uid === post.authorId && (
+                                            <button
+                                                className={`${styles.notifToggle} ${post.notificationSettings?.[user?.uid] !== false ? styles.active : ''}`}
+                                                onClick={() => togglePostNotifications(post.id, post.notificationSettings?.[user?.uid] !== false)}
+                                                title="Toggle Notifications"
+                                            >
+                                                {post.notificationSettings?.[user?.uid] !== false ? "🔔" : "🔕"}
+                                            </button>
+                                        )}
                                         <span>{post.createdAt?.toDate ? post.createdAt.toDate().toLocaleString() : 'Just now'}</span>
                                     </div>
                                 </div>

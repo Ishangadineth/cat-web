@@ -27,7 +27,6 @@ export default function Navbar() {
 
                     {user ? (
                         <li className={styles.authLinks}>
-                            <NotificationBell />
                             <Link href="/profile" className={styles.profileBtn} onClick={() => setIsMenuOpen(false)}>Profile</Link>
                             <button onClick={() => { logout(); setIsMenuOpen(false); }} className={styles.logoutBtn}>Logout</button>
                         </li>
@@ -38,11 +37,14 @@ export default function Navbar() {
                     )}
                 </ul>
 
-                <button className={styles.mobileMenu} onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+                <div className={styles.navActions}>
+                    {user && <NotificationBell />}
+                    <button className={styles.mobileMenu} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
             </nav>
         </header>
     );

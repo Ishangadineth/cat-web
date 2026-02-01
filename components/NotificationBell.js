@@ -25,11 +25,25 @@ export default function NotificationBell() {
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const notifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setNotifications(notifs);
-            setUnreadCount(notifs.filter(n => !n.read).length);
+
+            const newUnreadCount = notifs.filter(n => !n.read).length;
+
+            // Notification Sound Logic
+            if (newUnreadCount > unreadCount) {
+                const isSilent = user.notificationSettings?.silent;
+                const isMuted = user.notificationSettings?.mutedUntil?.toDate ? user.notificationSettings.mutedUntil.toDate() > new Date() : false;
+
+                if (!isSilent && !isMuted) {
+                    const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3");
+                    audio.play().catch(e => console.log("Sound play failed", e));
+                }
+            }
+
+            setUnreadCount(newUnreadCount);
         });
 
         return () => unsubscribe();
-    }, [user]);
+    }, [user, unreadCount]);
 
     const markAsRead = async (id) => {
         try {
