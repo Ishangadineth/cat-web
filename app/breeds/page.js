@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import styles from "./breeds.module.css";
+import AdContainer from "@/components/AdContainer";
 
 const breeds = [
     {
@@ -55,28 +56,38 @@ export default function Breeds() {
                 <p className={styles.subtitle}>Find the perfect companion from our curated list of feline royalty.</p>
             </header>
 
-            <div className={styles.grid}>
-                {breeds.map((breed, index) => (
-                    <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                        className={styles.breedCard}
-                    >
-                        <div className={styles.imageWrapper}>
-                            <img src={breed.image} alt={breed.name} className={styles.image} />
-                        </div>
-                        <div className={styles.info}>
-                            <h3>{breed.name}</h3>
-                            <span className={styles.origin}>{breed.origin}</span>
-                            <p>{breed.traits}</p>
-                            <button className={styles.learnMore}>Learn More</button>
-                        </div>
-                    </motion.div>
-                ))}
+            <div className={styles.layout}>
+                <div className={styles.mainContent}>
+                    <div className={styles.grid}>
+                        {breeds.map((breed, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                className={styles.breedCard}
+                            >
+                                <div className={styles.imageWrapper}>
+                                    <img src={breed.image} alt={breed.name} className={styles.image} />
+                                </div>
+                                <div className={styles.info}>
+                                    <h3>{breed.name}</h3>
+                                    <span className={styles.origin}>{breed.origin}</span>
+                                    <p>{breed.traits}</p>
+                                    <button className={styles.learnMore}>Learn More</button>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+
+                <aside className={styles.sidebar}>
+                    <AdContainer type="banner-160-600" />
+                    <AdContainer type="banner-160-300" />
+                </aside>
             </div>
+            <AdContainer type="banner-728-90" />
         </div>
     );
 }

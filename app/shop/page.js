@@ -48,7 +48,18 @@ export default function Shop() {
                 <p className={styles.subtitle}>Handpicked premium products for your feline royalty.</p>
             </header>
 
-            <AdContainer position="shop-top" />
+            <div className={styles.promotions}>
+                <a
+                    href="https://www.effectivegatecpm.com/x8t188qf?key=bd3258c0c4a51955751405218eb24d0f"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.smartlinkBtn}
+                >
+                    🔥 Today's Best Cat Deals (Up to 50% Off)
+                </a>
+            </div>
+
+            <AdContainer type="banner-728-90" />
 
             <div className={styles.grid}>
                 {products.map((item, index) => (
@@ -74,6 +85,8 @@ export default function Shop() {
                     </motion.div>
                 ))}
             </div>
+            <AdContainer type="banner-468-60" />
+            <AdContainer type="banner-300-250" />
         </div>
     );
 }

@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import styles from "./health.module.css";
+import AdContainer from "@/components/AdContainer";
 
 const healthTips = [
     {
@@ -43,27 +44,33 @@ export default function Health() {
                 <p className={styles.subtitle}>Essential tips to keep your feline companion thriving.</p>
             </header>
 
+            <AdContainer type="banner-728-90" />
+
             <div className={styles.grid}>
                 {healthTips.map((tip, index) => (
-                    <motion.div
-                        key={index}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                        className={styles.card}
-                    >
-                        <span className={styles.icon}>{tip.icon}</span>
-                        <h2>{tip.title}</h2>
-                        <p>{tip.description}</p>
-                        <ul className={styles.checklist}>
-                            {tip.checklist.map((item, i) => (
-                                <li key={i}>{item}</li>
-                            ))}
-                        </ul>
-                    </motion.div>
+                    <>
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            className={styles.card}
+                        >
+                            <span className={styles.icon}>{tip.icon}</span>
+                            <h2>{tip.title}</h2>
+                            <p>{tip.description}</p>
+                            <ul className={styles.checklist}>
+                                {tip.checklist.map((item, i) => (
+                                    <li key={i}>{item}</li>
+                                ))}
+                            </ul>
+                        </motion.div>
+                        {index === 1 && <AdContainer type="banner-300-250" />}
+                    </>
                 ))}
             </div>
+            <AdContainer type="banner-468-60" />
         </div>
     );
 }

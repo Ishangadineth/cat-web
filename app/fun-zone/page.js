@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./funzone.module.css";
+import AdContainer from "@/components/AdContainer";
 
 const names = {
     white: ["Snowball", "Pearl", "Casper", "Luna", "Yuki", "Ivory", "Marshmallow"],
@@ -32,6 +33,8 @@ export default function FunZone() {
             >
                 Cat <span>Fun Zone</span>
             </motion.h1>
+
+            <AdContainer type="banner-468-60" />
 
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -74,6 +77,8 @@ export default function FunZone() {
                     )}
                 </AnimatePresence>
             </motion.div>
+            <AdContainer type="banner-300-250" />
+            <AdContainer type="banner-728-90" />
         </div>
     );
 }

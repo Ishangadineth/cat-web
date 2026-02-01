@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import Script from "next/script";
 import { AuthProvider } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
+import AdManager from "@/components/AdManager";
 
 const outfit = Outfit({ subsets: ["latin"] });
 export const metadata = {
@@ -32,11 +33,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={outfit.className}>
         <AuthProvider>
-          <Script id="adsterra-script" strategy="afterInteractive">
-            {`
-              // Placeholder for Adsterra integration script
-            `}
-          </Script>
+          <AdManager />
           <Navbar />
           <main>{children}</main>
           <footer className="footer">

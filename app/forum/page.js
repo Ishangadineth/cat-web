@@ -6,6 +6,7 @@ import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./forum.module.css";
 import Link from "next/link";
+import AdContainer from "@/components/AdContainer";
 
 export default function Forum() {
     const { user } = useAuth();
@@ -72,25 +73,32 @@ export default function Forum() {
                 </div>
             )}
 
+            <AdContainer type="native" />
+
             <div className={styles.postsGrid}>
                 {loading ? <p>Loading posts...</p> : (
-                    posts.map((post) => (
-                        <motion.div
-                            key={post.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className={styles.postCard}
-                        >
-                            <div className={styles.postMeta}>
-                                <span>@{post.author}</span>
-                                <span>{post.createdAt?.toDate().toLocaleDateString()}</span>
-                            </div>
-                            <h2>{post.title}</h2>
-                            <p>{post.content}</p>
-                        </motion.div>
+                    posts.map((post, index) => (
+                        <>
+                            <motion.div
+                                key={post.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className={styles.postCard}
+                            >
+                                <div className={styles.postMeta}>
+                                    <span>@{post.author}</span>
+                                    <span>{post.createdAt?.toDate().toLocaleDateString()}</span>
+                                </div>
+                                <h2>{post.title}</h2>
+                                <p>{post.content}</p>
+                            </motion.div>
+                            {/* Insert an ad every 3 posts */}
+                            {index % 3 === 2 && <AdContainer type="banner-300-250" />}
+                        </>
                     ))
                 )}
             </div>
+            <AdContainer type="banner-728-90" />
         </div>
     );
 }

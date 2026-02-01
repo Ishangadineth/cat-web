@@ -99,3 +99,33 @@
     color: #000;
     border-color: var(--primary);
 }
+
+.layout {
+    display: flex;
+    gap: 3rem;
+}
+
+.mainContent {
+    flex: 1;
+}
+
+.sidebar {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+@media (max-width: 1200px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}

@@ -43,6 +43,8 @@ export default function Home() {
         </motion.div>
       </section>
 
+      <AdContainer type="banner-468-60" />
+
       {/* Featured Categories */}
       <section className={styles.categories}>
         <div className={styles.sectionHeader}>
@@ -77,7 +79,7 @@ export default function Home() {
         </div>
       </section>
 
-      <AdContainer position="home-middle" />
+      <AdContainer type="banner-728-90" />
 
       {/* Features/Values Section */}
       <section className={styles.features}>

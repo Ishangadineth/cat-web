@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import styles from "./history.module.css";
+import AdContainer from "@/components/AdContainer";
 
 const timelineData = [
     {
@@ -49,24 +50,32 @@ export default function History() {
                 <p className={styles.subtitle}>Trace the ancient lineage of our feline friends.</p>
             </header>
 
+            <AdContainer type="banner-728-90" />
+
             <div className={styles.timeline}>
                 {timelineData.map((item, index) => (
-                    <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
-                        className={`${styles.timelineItem} ${index % 2 === 0 ? styles.left : styles.right}`}
-                    >
-                        <div className={styles.content}>
-                            <span className={styles.year}>{item.year}</span>
-                            <h3>{item.icon} {item.title}</h3>
-                            <p>{item.description}</p>
-                        </div>
-                    </motion.div>
+                    <>
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: index * 0.1 }}
+                            className={`${styles.timelineItem} ${index % 2 === 0 ? styles.left : styles.right}`}
+                        >
+                            <div className={styles.content}>
+                                <span className={styles.year}>{item.year}</span>
+                                <h3>{item.icon} {item.title}</h3>
+                                <p>{item.description}</p>
+                            </div>
+                        </motion.div>
+                        {index === 2 && <AdContainer type="banner-300-250" />}
+                    </>
                 ))}
             </div>
+
+            <AdContainer type="native" />
+            <AdContainer type="banner-468-60" />
         </div>
     );
 }
