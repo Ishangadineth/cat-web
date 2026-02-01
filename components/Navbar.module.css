@@ -33,6 +33,7 @@
     gap: 1.5rem;
     list-style: none;
     align-items: center;
+    margin-left: auto;
 }
 
 .navLinks a {
