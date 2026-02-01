@@ -17,6 +17,7 @@ export default function Forum() {
     const [editTitle, setEditTitle] = useState("");
     const [editContent, setEditContent] = useState("");
     const [filter, setFilter] = useState("recent");
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
@@ -39,7 +40,6 @@ export default function Forum() {
                 authorId: user.uid,
                 createdAt: serverTimestamp(),
                 isEdited: false,
-                views: 0,
                 reactions: { like: [], heart: [], haha: [], sad: [] }
             });
             setNewPost({ title: "", content: "" });
@@ -48,24 +48,16 @@ export default function Forum() {
         }
     };
 
-    const handleView = async (postId) => {
-        try {
-            const postRef = doc(db, "posts", postId);
-            await updateDoc(postRef, {
-                views: (posts.find(p => p.id === postId)?.views || 0) + 1
-            });
-        } catch (err) {
-            console.error("View increment error:", err);
-        }
-    };
+    const filteredPosts = posts.filter(post =>
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.author.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
-    const sortedPosts = [...posts].sort((a, b) => {
+    const sortedPosts = [...filteredPosts].sort((a, b) => {
         if (filter === "top") {
             const getReactions = (p) => Object.values(p.reactions || {}).reduce((acc, curr) => acc + curr.length, 0);
             return getReactions(b) - getReactions(a);
-        }
-        if (filter === "views") {
-            return (b.views || 0) - (a.views || 0);
         }
         if (filter === "longest") {
             return (b.content?.length || 0) - (a.content?.length || 0);
@@ -201,30 +193,35 @@ export default function Forum() {
             <AdContainer type="native" />
 
             <div className={styles.filterBar}>
-                <button
-                    className={`${styles.filterBtn} ${filter === 'recent' ? styles.active : ''}`}
-                    onClick={() => setFilter('recent')}
-                >
-                    Most Recent
-                </button>
-                <button
-                    className={`${styles.filterBtn} ${filter === 'top' ? styles.active : ''}`}
-                    onClick={() => setFilter('top')}
-                >
-                    Top Rated
-                </button>
-                <button
-                    className={`${styles.filterBtn} ${filter === 'views' ? styles.active : ''}`}
-                    onClick={() => setFilter('views')}
-                >
-                    Most Viewed
-                </button>
-                <button
-                    className={`${styles.filterBtn} ${filter === 'longest' ? styles.active : ''}`}
-                    onClick={() => setFilter('longest')}
-                >
-                    Longest
-                </button>
+                <div className={styles.searchWrapper}>
+                    <input
+                        type="text"
+                        placeholder="🔍 Search topics, content or authors..."
+                        className={styles.searchInput}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+                <div className={styles.filterBtns}>
+                    <button
+                        className={`${styles.filterBtn} ${filter === 'recent' ? styles.active : ''}`}
+                        onClick={() => setFilter('recent')}
+                    >
+                        Most Recent
+                    </button>
+                    <button
+                        className={`${styles.filterBtn} ${filter === 'top' ? styles.active : ''}`}
+                        onClick={() => setFilter('top')}
+                    >
+                        Top Rated
+                    </button>
+                    <button
+                        className={`${styles.filterBtn} ${filter === 'longest' ? styles.active : ''}`}
+                        onClick={() => setFilter('longest')}
+                    >
+                        Longest
+                    </button>
+                </div>
             </div>
 
             <div className={styles.postsGrid}>
@@ -235,13 +232,11 @@ export default function Forum() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 className={styles.postCard}
-                                onClick={() => handleView(post.id)}
                             >
                                 <div className={styles.postMeta}>
                                     <div className={styles.authorInfo}>
                                         <span>@{post.author}</span>
                                         {post.isEdited && <span className={styles.edited}>(edited)</span>}
-                                        <span className={styles.viewCount}>👁️ {post.views || 0} views</span>
                                     </div>
                                     <span>{post.createdAt?.toDate ? post.createdAt.toDate().toLocaleString() : 'Just now'}</span>
                                 </div>
