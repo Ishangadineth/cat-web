@@ -1,8 +1,7 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
-import { storage, db } from "@/lib/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db } from "@/lib/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import styles from "./profile.module.css";
 import { useRouter } from "next/navigation";
@@ -27,20 +26,32 @@ export default function Profile() {
 
         setUploading(true);
         try {
-            const storageRef = ref(storage, `profiles/${user.uid}`);
-            await uploadBytes(storageRef, file);
-            const url = await getDownloadURL(storageRef);
+            // ImgBB Upload
+            const formData = new FormData();
+            formData.append("image", file);
 
-            await updateDoc(doc(db, "users", user.uid), {
-                avatar: url
+            const response = await fetch(`https://api.imgbb.com/1/upload?key=ba07f575ffe3acd13b49729eb4554b02`, {
+                method: "POST",
+                body: formData
             });
 
-            // Update user state locally if possible, but for now we reload 
-            // to ensure context is synced from Firestore
-            window.location.reload();
+            const data = await response.json();
+
+            if (data.success) {
+                const url = data.data.url;
+
+                // Update Firestore
+                await updateDoc(doc(db, "users", user.uid), {
+                    avatar: url
+                });
+
+                window.location.reload();
+            } else {
+                throw new Error("ImgBB upload failed");
+            }
         } catch (err) {
             console.error("Upload error:", err);
-            alert("Upload failed. Make sure Firebase Storage is enabled and rules are set.");
+            alert("Upload failed. Please check your connection.");
         } finally {
             setUploading(false);
         }
