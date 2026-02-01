@@ -26,6 +26,7 @@ export default function Navbar() {
 
                     {user ? (
                         <li className={styles.authLinks}>
+                            <NotificationBell />
                             <Link href="/profile" className={styles.profileBtn} onClick={() => setIsMenuOpen(false)}>Profile</Link>
                             <button onClick={() => { logout(); setIsMenuOpen(false); }} className={styles.logoutBtn}>Logout</button>
                         </li>

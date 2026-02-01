@@ -34,7 +34,6 @@
     top: 120px;
 }
 
-.savedContent,
 .contentColumn {
     flex: 1;
     width: 100%;
@@ -187,16 +186,6 @@
     color: var(--primary);
 }
 
-.savedItem p {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
-
-.noSaves {
-    color: var(--text-muted);
-    font-style: italic;
-}
-
 .avatarWrapper {
     position: relative;
     width: 150px;
@@ -252,16 +241,76 @@
     color: var(--primary);
 }
 
+.stat p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.notificationSettings {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.notificationSettings h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+.settingItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.settingItem span {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.toggleBtn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.3s;
+}
+
+.toggleBtn.active {
+    background: var(--primary);
+    color: #000;
+    font-weight: bold;
+}
+
+.muteSelect {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    outline: none;
+}
+
 .logoutBtn {
-    background: #ff4d4d11;
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(255, 77, 77, 0.1);
     color: #ff4d4d;
-    border: 1px solid #ff4d4d33;
-    padding: 0.8rem 2rem;
-    border-radius: 50px;
+    border: 1px solid rgba(255, 77, 77, 0.2);
+    border-radius: 12px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
-    width: 100%;
 }
 
 .logoutBtn:hover {

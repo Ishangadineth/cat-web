@@ -98,6 +98,27 @@ export default function Profile() {
         return null;
     }
 
+    const handleNotificationUpdate = async (field, value) => {
+        try {
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, {
+                [`notificationSettings.${field}`]: value
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleMute = async (hours) => {
+        if (hours === "none") {
+            await handleNotificationUpdate('mutedUntil', null);
+            return;
+        }
+        const mutedUntil = new Date();
+        mutedUntil.setHours(mutedUntil.getHours() + parseInt(hours));
+        await handleNotificationUpdate('mutedUntil', mutedUntil);
+    };
+
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -149,6 +170,31 @@ export default function Profile() {
                         <div className={styles.stat}>
                             <h4>{user.savedPosts?.length || 0}</h4>
                             <p>Saved</p>
+                        </div>
+                    </div>
+                    <div className={styles.notificationSettings}>
+                        <h3>🔔 Notifications</h3>
+                        <div className={styles.settingItem}>
+                            <span>Silent Mode</span>
+                            <button
+                                className={`${styles.toggleBtn} ${user.notificationSettings?.silent ? styles.active : ''}`}
+                                onClick={() => handleNotificationUpdate('silent', !user.notificationSettings?.silent)}
+                            >
+                                {user.notificationSettings?.silent ? 'ON' : 'OFF'}
+                            </button>
+                        </div>
+                        <div className={styles.settingItem}>
+                            <span>Temporary Mute</span>
+                            <select
+                                onChange={(e) => handleMute(e.target.value)}
+                                className={styles.muteSelect}
+                                value={user.notificationSettings?.mutedUntil?.toDate() > new Date() ? "active" : "none"}
+                            >
+                                <option value="none">Off</option>
+                                <option value="1">1 Hour</option>
+                                <option value="8">8 Hours</option>
+                                <option value="24">24 Hours</option>
+                            </select>
                         </div>
                     </div>
                     <button onClick={logout} className={styles.logoutBtn}>Sign Out</button>
