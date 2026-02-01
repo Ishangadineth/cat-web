@@ -359,21 +359,110 @@
     border-color: var(--primary);
 }
 
+.imagePreviews {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.previewItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.previewItem button {
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.postImagesContainer {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Smart Grid Layouts */
+.grid1 {
+    grid-template-columns: 1fr;
+}
+
+.grid2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.grid3 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+}
+
+.grid3 .postImageWrapper:first-child {
+    grid-column: span 2;
+}
+
+.grid4 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.grid5 {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto;
+}
+
+.grid5 .postImageWrapper:first-child,
+.grid5 .postImageWrapper:nth-child(2) {
+    grid-column: span 1.5;
+}
+
+/* Not valid CSS but for logic */
+.grid5 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.grid5 .postImageWrapper:nth-child(1),
+.grid5 .postImageWrapper:nth-child(2) {
+    grid-column: span 3;
+}
+
+.grid5 .postImageWrapper:nth-child(3),
+.grid5 .postImageWrapper:nth-child(4),
+.grid5 .postImageWrapper:nth-child(5) {
+    grid-column: span 2;
+}
+
 .postImageWrapper {
     width: 100%;
-    margin-top: 1.5rem;
     border-radius: 1.2rem;
     overflow: hidden;
     border: 1px solid var(--border);
+    position: relative;
+    aspect-ratio: 16/9;
+}
+
+.grid1 .postImageWrapper {
+    aspect-ratio: auto;
 }
 
 .postImage {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
     object-fit: cover;
-    max-height: 500px;
-    cursor: zoom-in;
+    max-height: 600px;
+    transition: 0.3s;
+}
+
+.postImage:hover {
+    transform: scale(1.02);
 }
 
 .editIconBtn:hover {

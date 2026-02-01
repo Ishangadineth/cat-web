@@ -12,7 +12,7 @@ export default function Forum() {
     const { user } = useAuth();
     const [posts, setPosts] = useState([]);
     const [newPost, setNewPost] = useState({ title: "", content: "" });
-    const [image, setImage] = useState(null);
+    const [images, setImages] = useState([]);
     const [uploading, setUploading] = useState(false);
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState(null);
@@ -32,36 +32,44 @@ export default function Forum() {
     }, []);
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImage(file);
+        const files = Array.from(e.target.files);
+        if (files.length + images.length > 5) {
+            alert("Maximum 5 images allowed per post.");
+            return;
         }
+        setImages([...images, ...files]);
+    };
+
+    const removeImage = (index) => {
+        setImages(images.filter((_, i) => i !== index));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!user) return alert("Please login first!");
+        if (!newPost.title) return alert("Please add a title!");
+        if (!newPost.content && images.length === 0) return alert("Please add some content or an image!");
 
         setUploading(true);
         try {
-            let imageUrl = null;
+            const uploadedUrls = [];
 
-            if (image) {
+            for (const img of images) {
                 const formData = new FormData();
-                formData.append("image", image);
+                formData.append("image", img);
                 const response = await fetch(`https://api.imgbb.com/1/upload?key=ba07f575ffe3acd13b49729eb4554b02`, {
                     method: "POST",
                     body: formData
                 });
                 const data = await response.json();
                 if (data.success) {
-                    imageUrl = data.data.url;
+                    uploadedUrls.push(data.data.url);
                 }
             }
 
             await addDoc(collection(db, "posts"), {
                 ...newPost,
-                image: imageUrl,
+                images: uploadedUrls,
                 author: user.username,
                 authorId: user.uid,
                 createdAt: serverTimestamp(),
@@ -69,7 +77,7 @@ export default function Forum() {
                 reactions: { like: [], heart: [], haha: [], sad: [] }
             });
             setNewPost({ title: "", content: "" });
-            setImage(null);
+            setImages([]);
         } catch (err) {
             console.error(err);
             alert("Failed to post. Please try again.");
@@ -206,16 +214,26 @@ export default function Forum() {
                             required
                         />
                         <textarea
-                            placeholder="Share your story or question..."
+                            placeholder="Share your story or question... (Optional if image added)"
                             value={newPost.content}
                             onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
-                            required
                         />
+
+                        {images.length > 0 && (
+                            <div className={styles.imagePreviews}>
+                                {images.map((img, idx) => (
+                                    <div key={idx} className={styles.previewItem}>
+                                        <span>{img.name}</span>
+                                        <button type="button" onClick={() => removeImage(idx)}>✕</button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
                         <div className={styles.formActions}>
                             <label className={styles.imageUploadBtn}>
-                                📷 {image ? image.name : "Add Image"}
-                                <input type="file" hidden onChange={handleFileChange} accept="image/*" />
+                                📷 {images.length > 0 ? `${images.length} Images` : "Add Images (Max 5)"}
+                                <input type="file" hidden onChange={handleFileChange} accept="image/*" multiple disabled={uploading} />
                             </label>
                             <button type="submit" disabled={uploading}>
                                 {uploading ? "Posting..." : "Post Topic"}
@@ -302,8 +320,21 @@ export default function Forum() {
                                 ) : (
                                     <>
                                         <h2>{post.title}</h2>
-                                        <p>{post.content}</p>
-                                        {post.image && (
+                                        {post.content && <p>{post.content}</p>}
+
+                                        {/* Support for new multiple images array */}
+                                        {post.images && post.images.length > 0 && (
+                                            <div className={`${styles.postImagesContainer} ${styles[`grid${post.images.length}`]}`}>
+                                                {post.images.map((img, idx) => (
+                                                    <div key={idx} className={styles.postImageWrapper}>
+                                                        <img src={img} alt={`${post.title}-${idx}`} className={styles.postImage} />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {/* Compatibility for legacy single image posts */}
+                                        {post.image && !post.images && (
                                             <div className={styles.postImageWrapper}>
                                                 <img src={post.image} alt={post.title} className={styles.postImage} />
                                             </div>
