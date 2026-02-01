@@ -35,11 +35,12 @@ export default function Profile() {
                 avatar: url
             });
 
-            alert("Profile picture updated!");
+            // Update user state locally if possible, but for now we reload 
+            // to ensure context is synced from Firestore
             window.location.reload();
         } catch (err) {
-            console.error(err);
-            alert("Upload failed.");
+            console.error("Upload error:", err);
+            alert("Upload failed. Make sure Firebase Storage is enabled and rules are set.");
         } finally {
             setUploading(false);
         }
