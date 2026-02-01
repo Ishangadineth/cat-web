@@ -14,6 +14,7 @@ export default function Forum() {
     const [newPost, setNewPost] = useState({ title: "", content: "" });
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState(null);
+    const [editTitle, setEditTitle] = useState("");
     const [editContent, setEditContent] = useState("");
 
     useEffect(() => {
@@ -70,6 +71,7 @@ export default function Forum() {
 
     const handleEdit = (post) => {
         setEditingId(post.id);
+        setEditTitle(post.title);
         setEditContent(post.content);
     };
 
@@ -77,6 +79,7 @@ export default function Forum() {
         try {
             const postRef = doc(db, "posts", postId);
             await updateDoc(postRef, {
+                title: editTitle,
                 content: editContent,
                 isEdited: true,
                 updatedAt: serverTimestamp()
@@ -180,13 +183,19 @@ export default function Forum() {
                                     <span>{post.createdAt?.toDate ? post.createdAt.toDate().toLocaleString() : 'Just now'}</span>
                                 </div>
 
-                                <h2>{post.title}</h2>
                                 {editingId === post.id ? (
                                     <div className={styles.editArea}>
+                                        <input
+                                            className={styles.editTitleInput}
+                                            value={editTitle}
+                                            onChange={(e) => setEditTitle(e.target.value)}
+                                            placeholder="Edit title..."
+                                        />
                                         <textarea
                                             className={styles.editInput}
                                             value={editContent}
                                             onChange={(e) => setEditContent(e.target.value)}
+                                            placeholder="Edit content..."
                                         />
                                         <div className={styles.editControls}>
                                             <button className={styles.saveBtn} onClick={() => handleSaveEdit(post.id)}>Save</button>
@@ -194,7 +203,10 @@ export default function Forum() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <p>{post.content}</p>
+                                    <>
+                                        <h2>{post.title}</h2>
+                                        <p>{post.content}</p>
+                                    </>
                                 )}
 
                                 <div className={styles.actions}>

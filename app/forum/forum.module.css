@@ -206,18 +206,33 @@
 .editArea {
     width: 100%;
     margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.editTitleInput {
+    width: 100%;
+    background: var(--secondary);
+    border: 1px solid var(--primary);
+    border-radius: 12px;
+    color: var(--primary);
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    outline: none;
 }
 
 .editInput {
     width: 100%;
     background: var(--secondary);
-    border: 1px solid var(--primary);
+    border: 1px solid var(--border);
     border-radius: 12px;
     color: #fff;
     padding: 1rem;
-    margin-bottom: 1rem;
     outline: none;
     resize: vertical;
+    min-height: 100px;
 }
 
 .editControls {
