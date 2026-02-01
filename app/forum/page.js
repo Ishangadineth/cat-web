@@ -49,13 +49,22 @@ export default function Forum() {
         if (!user) return alert("Please login to react!");
         const postRef = doc(db, "posts", postId);
         const post = posts.find(p => p.id === postId);
-        const currentReactions = post.reactions?.[type] || [];
 
-        const updateField = `reactions.${type}`;
-        if (currentReactions.includes(user.uid)) {
-            await updateDoc(postRef, { [updateField]: arrayRemove(user.uid) });
-        } else {
-            await updateDoc(postRef, { [updateField]: arrayUnion(user.uid) });
+        const hasTHIS = post.reactions?.[type]?.includes(user.uid);
+        const updates = {};
+
+        ['like', 'heart', 'haha', 'sad'].forEach(t => {
+            if (post.reactions?.[t]?.includes(user.uid)) {
+                updates[`reactions.${t}`] = arrayRemove(user.uid);
+            }
+        });
+
+        if (!hasTHIS) {
+            updates[`reactions.${type}`] = arrayUnion(user.uid);
+        }
+
+        if (Object.keys(updates).length > 0) {
+            await updateDoc(postRef, updates);
         }
     };
 

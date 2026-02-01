@@ -5,15 +5,82 @@
     justify-content: center;
 }
 
+.profileSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+    width: 100%;
+    max-width: 1200px;
+}
+
+@media (min-width: 1024px) {
+    .profileSection {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+}
+
 .profileCard {
     background: var(--card-bg);
     border: 1px solid var(--border);
-    padding: 4rem;
-    border-radius: 3rem;
+    padding: 3rem;
+    border-radius: 2rem;
     width: 100%;
-    max-width: 500px;
+    max-width: 400px;
     text-align: center;
-    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 120px;
+}
+
+.savedContent {
+    flex: 1;
+    width: 100%;
+}
+
+.savedContent h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.savedGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.savedItem {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.savedItem:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+}
+
+.savedItem h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+.savedItem p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.noSaves {
+    color: var(--text-muted);
+    font-style: italic;
 }
 
 .avatarWrapper {
@@ -48,26 +115,26 @@
 }
 
 .profileCard h1 {
-    font-size: 2.2rem;
+    font-size: 2rem;
     margin-bottom: 0.5rem;
 }
 
 .email {
     color: var(--text-muted);
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 
 .stats {
     display: flex;
     justify-content: center;
-    gap: 3rem;
+    gap: 2rem;
     border-top: 1px solid var(--border);
-    padding-top: 2rem;
-    margin-bottom: 2.5rem;
+    padding-top: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .stat h4 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: var(--primary);
 }
 
@@ -80,6 +147,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
+    width: 100%;
 }
 
 .logoutBtn:hover {

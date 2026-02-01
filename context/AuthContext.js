@@ -8,7 +8,7 @@ import {
     signInWithPopup
 } from "firebase/auth";
 import { auth, db, googleProvider, facebookProvider, githubProvider, appleProvider } from "@/lib/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 
 const AuthContext = createContext({});
 
@@ -17,35 +17,42 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-            if (firebaseUser) {
-                try {
-                    const userDocRef = doc(db, "users", firebaseUser.uid);
-                    const userDoc = await getDoc(userDocRef);
+        let unsubscribeDoc = null;
 
-                    if (userDoc.exists()) {
-                        setUser({ ...firebaseUser, ...userDoc.data() });
+        const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
+            if (unsubscribeDoc) unsubscribeDoc(); // Cleanup previous listener
+
+            if (firebaseUser) {
+                const userDocRef = doc(db, "users", firebaseUser.uid);
+
+                unsubscribeDoc = onSnapshot(userDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        setUser({ ...firebaseUser, ...docSnap.data() });
                     } else {
+                        // Handle new user creation as before
                         const userData = {
-                            username: firebaseUser.displayName || (firebaseUser.email ? firebaseUser.email.split('@')[0] : 'User'),
+                            username: firebaseUser.displayName || firebaseUser.email.split('@')[0],
                             email: firebaseUser.email,
                             uid: firebaseUser.uid,
                             avatar: firebaseUser.photoURL || null,
+                            savedPosts: [],
                             createdAt: new Date().toISOString()
                         };
-                        await setDoc(userDocRef, userData);
+                        setDoc(userDocRef, userData);
                         setUser({ ...firebaseUser, ...userData });
                     }
-                } catch (error) {
-                    console.error("Error fetching/creating user doc:", error);
-                    setUser(firebaseUser); // Set basic user even if firestore fails
-                }
+                    setLoading(false);
+                });
             } else {
                 setUser(null);
+                setLoading(false);
             }
-            setLoading(false);
         });
-        return () => unsubscribe();
+
+        return () => {
+            unsubscribeAuth();
+            if (unsubscribeDoc) unsubscribeDoc();
+        };
     }, []);
 
     const signup = async (email, password, username) => {

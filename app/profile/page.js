@@ -1,15 +1,41 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import styles from "./profile.module.css";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Profile() {
     const { user, logout, loading } = useAuth();
     const [uploading, setUploading] = useState(false);
+    const [savedPosts, setSavedPosts] = useState([]);
+    const [loadingSaved, setLoadingSaved] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        if (user?.savedPosts?.length > 0) {
+            fetchSavedPosts();
+        }
+    }, [user]);
+
+    const fetchSavedPosts = async () => {
+        setLoadingSaved(true);
+        try {
+            const postsRef = collection(db, "posts");
+            // Firestore 'in' query has a limit of 10-30 IDs usually, 
+            // but for simple user saves this is fine for now.
+            const q = query(postsRef, where("__name__", "in", user.savedPosts.slice(0, 30)));
+            const querySnapshot = await getDocs(q);
+            const posts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setSavedPosts(posts);
+        } catch (err) {
+            console.error("Error fetching saved posts:", err);
+        } finally {
+            setLoadingSaved(false);
+        }
+    };
 
     if (loading) {
         return <div className={styles.container}><h1>Loading...</h1></div>;
@@ -26,32 +52,21 @@ export default function Profile() {
 
         setUploading(true);
         try {
-            // ImgBB Upload
             const formData = new FormData();
             formData.append("image", file);
-
             const response = await fetch(`https://api.imgbb.com/1/upload?key=ba07f575ffe3acd13b49729eb4554b02`, {
                 method: "POST",
                 body: formData
             });
-
             const data = await response.json();
-
             if (data.success) {
                 const url = data.data.url;
-
-                // Update Firestore
-                await updateDoc(doc(db, "users", user.uid), {
-                    avatar: url
-                });
-
+                await updateDoc(doc(db, "users", user.uid), { avatar: url });
                 window.location.reload();
-            } else {
-                throw new Error("ImgBB upload failed");
             }
         } catch (err) {
             console.error("Upload error:", err);
-            alert("Upload failed. Please check your connection.");
+            alert("Upload failed.");
         } finally {
             setUploading(false);
         }
@@ -59,30 +74,45 @@ export default function Profile() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.profileCard}>
-                <div className={styles.avatarWrapper}>
-                    <img
-                        src={user.avatar || "/default-avatar.png"}
-                        alt="Profile"
-                        className={styles.avatar}
-                    />
-                    <label className={styles.uploadBtn}>
-                        {uploading ? "..." : "📸"}
-                        <input type="file" hidden onChange={handleImageUpload} disabled={uploading} />
-                    </label>
-                </div>
-
-                <h1>{user.username}</h1>
-                <p className={styles.email}>{user.email}</p>
-
-                <div className={styles.stats}>
-                    <div className={styles.stat}>
-                        <h4>0</h4>
-                        <p>Posts</p>
+            <div className={styles.profileSection}>
+                <div className={styles.profileCard}>
+                    <div className={styles.avatarWrapper}>
+                        <img src={user.avatar || "/default-avatar.png"} alt="Profile" className={styles.avatar} />
+                        <label className={styles.uploadBtn}>
+                            {uploading ? "..." : "📸"}
+                            <input type="file" hidden onChange={handleImageUpload} disabled={uploading} />
+                        </label>
                     </div>
+                    <h1>{user.username}</h1>
+                    <p className={styles.email}>{user.email}</p>
+                    <div className={styles.stats}>
+                        <div className={styles.stat}>
+                            <h4>0</h4>
+                            <p>Posts</p>
+                        </div>
+                        <div className={styles.stat}>
+                            <h4>{user.savedPosts?.length || 0}</h4>
+                            <p>Saved</p>
+                        </div>
+                    </div>
+                    <button onClick={logout} className={styles.logoutBtn}>Sign Out</button>
                 </div>
 
-                <button onClick={logout} className={styles.logoutBtn}>Sign Out</button>
+                <div className={styles.savedContent}>
+                    <h2>🔖 Saved Posts</h2>
+                    {loadingSaved ? <p>Loading saved content...</p> : (
+                        <div className={styles.savedGrid}>
+                            {savedPosts.length > 0 ? savedPosts.map(post => (
+                                <Link href="/forum" key={post.id} className={styles.savedItem}>
+                                    <h3>{post.title}</h3>
+                                    <p>by @{post.author}</p>
+                                </Link>
+                            )) : (
+                                <p className={styles.noSaves}>You haven't saved any posts yet.</p>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
