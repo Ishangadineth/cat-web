@@ -19,6 +19,9 @@ export default function Forum() {
     const [editingId, setEditingId] = useState(null);
     const [editTitle, setEditTitle] = useState("");
     const [editContent, setEditContent] = useState("");
+    const [editImages, setEditImages] = useState([]);
+    const [replyingId, setReplyingId] = useState(null);
+    const [replyContent, setReplyContent] = useState("");
     const [filter, setFilter] = useState("recent");
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -56,8 +59,9 @@ export default function Forum() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!user) return alert("Please login first!");
-        if (!newPost.title.trim()) return alert("Topic Title is required!");
-        if (!newPost.content && images.length === 0) return alert("Please add some content or an image!");
+        if (!newPost.title.trim() && !newPost.content.trim() && images.length === 0) {
+            return alert("Please add a title, content or an image!");
+        }
 
         setUploading(true);
         try {
@@ -83,7 +87,8 @@ export default function Forum() {
                 authorId: user.uid,
                 createdAt: serverTimestamp(),
                 isEdited: false,
-                reactions: { like: [], heart: [], haha: [], sad: [] }
+                reactions: { like: [], heart: [], haha: [], sad: [] },
+                comments: []
             });
 
             // Cleanup
@@ -100,9 +105,9 @@ export default function Forum() {
     };
 
     const filteredPosts = posts.filter(post =>
-        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.author.toLowerCase().includes(searchQuery.toLowerCase())
+        (post.title?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+        (post.content?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+        (post.author?.toLowerCase() || "").includes(searchQuery.toLowerCase())
     );
 
     const sortedPosts = [...filteredPosts].sort((a, b) => {
@@ -144,10 +149,35 @@ export default function Forum() {
         }
     };
 
+    const handleReply = async (postId) => {
+        if (!user) return alert("Please login to reply!");
+        if (!replyContent.trim()) return;
+
+        try {
+            const postRef = doc(db, "posts", postId);
+            const newReply = {
+                id: Date.now().toString(),
+                author: user.username,
+                authorId: user.uid,
+                content: replyContent,
+                createdAt: new Date().toISOString()
+            };
+
+            await updateDoc(postRef, {
+                comments: arrayUnion(newReply)
+            });
+            setReplyContent("");
+            setReplyingId(null);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     const handleEdit = (post) => {
         setEditingId(post.id);
-        setEditTitle(post.title);
-        setEditContent(post.content);
+        setEditTitle(post.title || "");
+        setEditContent(post.content || "");
+        setEditImages(post.images || (post.image ? [post.image] : []));
     };
 
     const handleSaveEdit = async (postId) => {
@@ -156,6 +186,7 @@ export default function Forum() {
             await updateDoc(postRef, {
                 title: editTitle,
                 content: editContent,
+                images: editImages,
                 isEdited: true,
                 updatedAt: serverTimestamp()
             });
@@ -317,7 +348,7 @@ export default function Forum() {
                                             className={styles.editTitleInput}
                                             value={editTitle}
                                             onChange={(e) => setEditTitle(e.target.value)}
-                                            placeholder="Edit title..."
+                                            placeholder="Edit title (optional)..."
                                         />
                                         <textarea
                                             className={styles.editInput}
@@ -325,6 +356,21 @@ export default function Forum() {
                                             onChange={(e) => setEditContent(e.target.value)}
                                             placeholder="Edit content..."
                                         />
+
+                                        {editImages.length > 0 && (
+                                            <div className={styles.editImagePreviews}>
+                                                {editImages.map((img, idx) => (
+                                                    <div key={idx} className={styles.editPreviewItem}>
+                                                        <img src={img} alt="Edit Preview" />
+                                                        <button
+                                                            onClick={() => setEditImages(editImages.filter((_, i) => i !== idx))}
+                                                            className={styles.removeEditImage}
+                                                        >✕</button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
                                         <div className={styles.editControls}>
                                             <button className={styles.saveBtn} onClick={() => handleSaveEdit(post.id)}>Save</button>
                                             <button className={styles.cancelBtn} onClick={() => setEditingId(null)}>Cancel</button>
@@ -332,7 +378,7 @@ export default function Forum() {
                                     </div>
                                 ) : (
                                     <>
-                                        <h2>{post.title}</h2>
+                                        {post.title && <h2>{post.title}</h2>}
                                         {post.content && <p>{post.content}</p>}
 
                                         {/* Support for new multiple images array */}
@@ -372,7 +418,9 @@ export default function Forum() {
                                     </div>
 
                                     <div className={styles.interactionBtns}>
-                                        <button className={styles.actionBtn}>💬 Reply</button>
+                                        <button className={styles.actionBtn} onClick={() => setReplyingId(replyingId === post.id ? null : post.id)}>
+                                            💬 {post.comments?.length || 0} Replies
+                                        </button>
                                         <button className={styles.actionBtn} onClick={() => handleShare(post)}>📤 Share</button>
                                         <button className={styles.actionBtn} onClick={() => handleSavePost(post.id)}>
                                             {user?.savedPosts?.includes(post.id) ? "🔖 Saved" : "🔖 Save"}
@@ -385,6 +433,37 @@ export default function Forum() {
                                         )}
                                     </div>
                                 </div>
+
+                                {/* Comments Section */}
+                                {replyingId === post.id && (
+                                    <div className={styles.commentsSection}>
+                                        <div className={styles.commentsList}>
+                                            {post.comments?.map((comment) => (
+                                                <div key={comment.id} className={styles.commentItem}>
+                                                    <div className={styles.commentHeader}>
+                                                        <span className={styles.commentAuthor}>@{comment.author}</span>
+                                                        <span className={styles.commentDate}>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                                                    </div>
+                                                    <p>{comment.content}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {user ? (
+                                            <div className={styles.replyInput}>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Write a reply..."
+                                                    value={replyContent}
+                                                    onChange={(e) => setReplyContent(e.target.value)}
+                                                />
+                                                <button onClick={() => handleReply(post.id)}>Reply</button>
+                                            </div>
+                                        ) : (
+                                            <p className={styles.commentLoginPrompt}>Please login to reply.</p>
+                                        )}
+                                    </div>
+                                )}
                             </motion.div>
                             {/* Insert an ad every 3 posts */}
                             {index % 3 === 2 && <AdContainer type="banner-300-250" />}
