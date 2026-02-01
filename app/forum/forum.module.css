@@ -260,3 +260,16 @@
 .editIconBtn:hover {
     color: var(--primary);
 }
+
+.deleteIconBtn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.3s;
+}
+
+.deleteIconBtn:hover {
+    color: #ff4d4d;
+}

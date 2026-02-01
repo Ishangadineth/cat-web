@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
+import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, arrayUnion, arrayRemove, getDoc, deleteDoc } from "firebase/firestore";
 import { motion } from "framer-motion";
 import styles from "./forum.module.css";
 import Link from "next/link";
@@ -84,6 +84,17 @@ export default function Forum() {
             setEditingId(null);
         } catch (err) {
             console.error(err);
+        }
+    };
+
+    const handleDeletePost = async (postId) => {
+        if (!confirm("Are you sure you want to delete this post?")) return;
+        try {
+            const postRef = doc(db, "posts", postId);
+            await deleteDoc(postRef);
+        } catch (err) {
+            console.error("Error deleting post:", err);
+            alert("Failed to delete post.");
         }
     };
 
@@ -207,7 +218,10 @@ export default function Forum() {
                                         <button className={styles.actionBtn} onClick={() => handleShare(post)}>📤 Share</button>
                                         <button className={styles.actionBtn} onClick={() => handleSavePost(post.id)}>🔖 Save</button>
                                         {user?.uid === post.authorId && (
-                                            <button className={styles.editIconBtn} onClick={() => handleEdit(post)}>✏️ Edit</button>
+                                            <>
+                                                <button className={styles.editIconBtn} onClick={() => handleEdit(post)}>✏️ Edit</button>
+                                                <button className={styles.deleteIconBtn} onClick={() => handleDeletePost(post.id)}>🗑️ Delete</button>
+                                            </>
                                         )}
                                     </div>
                                 </div>
