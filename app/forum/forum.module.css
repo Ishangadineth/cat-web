@@ -332,6 +332,50 @@
     font-size: 0.8rem;
 }
 
+.formActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.imageUploadBtn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.3s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.imageUploadBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary);
+}
+
+.postImageWrapper {
+    width: 100%;
+    margin-top: 1.5rem;
+    border-radius: 1.2rem;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.postImage {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 500px;
+    cursor: zoom-in;
+}
+
 .editIconBtn:hover {
     color: var(--primary);
 }

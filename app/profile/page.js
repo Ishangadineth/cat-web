@@ -172,7 +172,10 @@ export default function Profile() {
                             <div className={styles.postsGrid}>
                                 {userPosts.length > 0 ? userPosts.map(post => (
                                     <Link href="/forum" key={post.id} className={styles.postItem}>
-                                        <h3>{post.title}</h3>
+                                        <div className={styles.postTitleRow}>
+                                            <h3>{post.title}</h3>
+                                            {post.image && <span className={styles.imageIndicator}>🖼️</span>}
+                                        </div>
                                         <div className={styles.postMeta}>
                                             <span>📅 {post.createdAt?.toDate ? post.createdAt.toDate().toLocaleDateString() : 'Just now'}</span>
                                             <span>❤️ {Object.values(post.reactions || {}).reduce((a, b) => a + b.length, 0)}</span>

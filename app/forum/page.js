@@ -12,6 +12,8 @@ export default function Forum() {
     const { user } = useAuth();
     const [posts, setPosts] = useState([]);
     const [newPost, setNewPost] = useState({ title: "", content: "" });
+    const [image, setImage] = useState(null);
+    const [uploading, setUploading] = useState(false);
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState(null);
     const [editTitle, setEditTitle] = useState("");
@@ -29,13 +31,37 @@ export default function Forum() {
         return () => unsubscribe();
     }, []);
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!user) return alert("Please login first!");
 
+        setUploading(true);
         try {
+            let imageUrl = null;
+
+            if (image) {
+                const formData = new FormData();
+                formData.append("image", image);
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=ba07f575ffe3acd13b49729eb4554b02`, {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    imageUrl = data.data.url;
+                }
+            }
+
             await addDoc(collection(db, "posts"), {
                 ...newPost,
+                image: imageUrl,
                 author: user.username,
                 authorId: user.uid,
                 createdAt: serverTimestamp(),
@@ -43,8 +69,12 @@ export default function Forum() {
                 reactions: { like: [], heart: [], haha: [], sad: [] }
             });
             setNewPost({ title: "", content: "" });
+            setImage(null);
         } catch (err) {
             console.error(err);
+            alert("Failed to post. Please try again.");
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -181,7 +211,16 @@ export default function Forum() {
                             onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
                             required
                         />
-                        <button type="submit">Post Topic</button>
+
+                        <div className={styles.formActions}>
+                            <label className={styles.imageUploadBtn}>
+                                📷 {image ? image.name : "Add Image"}
+                                <input type="file" hidden onChange={handleFileChange} accept="image/*" />
+                            </label>
+                            <button type="submit" disabled={uploading}>
+                                {uploading ? "Posting..." : "Post Topic"}
+                            </button>
+                        </div>
                     </form>
                 </section>
             ) : (
@@ -264,6 +303,11 @@ export default function Forum() {
                                     <>
                                         <h2>{post.title}</h2>
                                         <p>{post.content}</p>
+                                        {post.image && (
+                                            <div className={styles.postImageWrapper}>
+                                                <img src={post.image} alt={post.title} className={styles.postImage} />
+                                            </div>
+                                        )}
                                     </>
                                 )}
 
