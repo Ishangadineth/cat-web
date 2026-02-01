@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import NotificationBell from "./NotificationBell";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
