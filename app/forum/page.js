@@ -6,10 +6,12 @@ import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, u
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./forum.module.css";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import AdContainer from "@/components/AdContainer";
 
 export default function Forum() {
     const { user } = useAuth();
+    const router = useRouter();
     const [posts, setPosts] = useState([]);
     const [newPost, setNewPost] = useState({ title: "", content: "" });
     const [images, setImages] = useState([]);
@@ -38,7 +40,7 @@ export default function Forum() {
     }, []);
 
     const togglePostNotifications = async (postId, currentState) => {
-        if (!user) return alert("Please login first!");
+        if (!user) return router.push("/login");
         try {
             const postRef = doc(db, "posts", postId);
             await updateDoc(postRef, {
@@ -132,7 +134,7 @@ export default function Forum() {
     });
 
     const handleReaction = async (postId, type) => {
-        if (!user) return alert("Please login to react!");
+        if (!user) return router.push("/login");
         const postRef = doc(db, "posts", postId);
         const post = posts.find(p => p.id === postId);
         const hasTHIS = post.reactions?.[type]?.includes(user.uid);
@@ -145,7 +147,7 @@ export default function Forum() {
     };
 
     const handleReply = async (postId, parentCommentId = null) => {
-        if (!user) return alert("Please login to reply!");
+        if (!user) return router.push("/login");
         if (!replyContent.trim()) return;
 
         try {
@@ -201,7 +203,7 @@ export default function Forum() {
     };
 
     const handleCommentReaction = async (postId, commentId) => {
-        if (!user) return alert("Please login to react!");
+        if (!user) return router.push("/login");
         try {
             const postRef = doc(db, "posts", postId);
             const post = posts.find(p => p.id === postId);
@@ -265,7 +267,7 @@ export default function Forum() {
     };
 
     const handleSavePost = async (postId) => {
-        if (!user) return alert("Please login to save posts!");
+        if (!user) return router.push("/login");
         try {
             const userRef = doc(db, "users", user.uid);
             const isSaved = user.savedPosts?.includes(postId);

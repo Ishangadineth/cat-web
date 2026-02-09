@@ -5,7 +5,8 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signOut,
-    signInWithPopup
+    signInWithPopup,
+    sendPasswordResetEmail
 } from "firebase/auth";
 import { auth, db, googleProvider, facebookProvider, githubProvider, appleProvider } from "@/lib/firebase";
 import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
@@ -86,8 +87,12 @@ export const AuthProvider = ({ children }) => {
         return signOut(auth);
     };
 
+    const resetPassword = (email) => {
+        return sendPasswordResetEmail(auth, email);
+    };
+
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout, loginWithProvider, loading }}>
+        <AuthContext.Provider value={{ user, login, signup, logout, loginWithProvider, resetPassword, loading }}>
             {!loading && children}
         </AuthContext.Provider>
     );

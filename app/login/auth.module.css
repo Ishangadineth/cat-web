@@ -42,6 +42,35 @@
     gap: 1.2rem;
 }
 
+.success {
+    color: #4CAF50;
+    background: rgba(76, 175, 80, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.forgotBtnWrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -0.5rem;
+}
+
+.forgotBtn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.forgotBtn:hover {
+    color: var(--primary);
+}
+
 .authBox input {
     padding: 1rem 1.5rem;
     background: var(--secondary);

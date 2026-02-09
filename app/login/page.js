@@ -9,7 +9,8 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const { user, login, loginWithProvider, loading } = useAuth();
+    const [message, setMessage] = useState("");
+    const { user, login, loginWithProvider, resetPassword, loading } = useAuth();
     const router = useRouter();
 
     // If user is already logged in, redirect to profile
@@ -20,11 +21,26 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
+        setMessage("");
         try {
             await login(email, password);
             router.push("/profile");
         } catch (err) {
             setError("Failed to login. Check your credentials.");
+            console.error(err);
+        }
+    };
+
+    const handleResetPassword = async () => {
+        if (!email) return setError("Please enter your email first.");
+        setError("");
+        setMessage("");
+        try {
+            await resetPassword(email);
+            setMessage("Password reset email sent! Check your inbox.");
+        } catch (err) {
+            setError("Failed to send reset email.");
             console.error(err);
         }
     };
@@ -44,6 +60,7 @@ export default function Login() {
             <div className={styles.authBox}>
                 <h1>Login to <span>Paws</span></h1>
                 {error && <p className={styles.error}>{error}</p>}
+                {message && <p className={styles.success}>{message}</p>}
                 <form onSubmit={handleSubmit}>
                     <input
                         type="email"
@@ -59,6 +76,11 @@ export default function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
+                    <div className={styles.forgotBtnWrapper}>
+                        <button type="button" onClick={handleResetPassword} className={styles.forgotBtn}>
+                            Forgot Password?
+                        </button>
+                    </div>
                     <button type="submit" className={styles.submitBtn}>Login</button>
                 </form>
 
