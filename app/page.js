@@ -3,6 +3,12 @@ import { motion } from "framer-motion";
 import styles from "./page.module.css";
 import AdContainer from "@/components/AdContainer";
 import Link from "next/link";
+import BreedsSection from "@/components/BreedsSection";
+import ShopSection from "@/components/ShopSection";
+import ContactSection from "@/components/ContactSection";
+import AdminPanel from "@/components/AdminPanel";
+import HealthSection from "@/components/HealthSection";
+import HistorySection from "@/components/HistorySection";
 
 export default function Home() {
   return (
@@ -45,41 +51,28 @@ export default function Home() {
 
       <AdContainer type="banner-468-60" />
 
-      {/* Featured Categories */}
-      <section className={styles.categories}>
-        <div className={styles.sectionHeader}>
-          <h2>Explore the <span>Universe</span></h2>
-          <p>Everything you need to know about your cat.</p>
-        </div>
+      {/* History Section */}
+      <HistorySection />
 
-        <div className={styles.categoryGrid}>
-          <Link href="/history" className={styles.categoryCard}>
-            <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?q=80&w=2033&auto=format&fit=crop" className={styles.categoryImage} />
-            <div className={styles.categoryOverlay}>
-              <h3>History</h3>
-              <p>10,000 years of evolution</p>
-            </div>
-          </Link>
+      <AdContainer type="banner-468-60" />
 
-          <Link href="/behavior" className={styles.categoryCard}>
-            <img src="https://images.unsplash.com/photo-1511044568932-338cba0ad803?q=80&w=2070&auto=format&fit=crop" className={styles.categoryImage} />
-            <div className={styles.categoryOverlay}>
-              <h3>Behavior</h3>
-              <p>Decode the secret language</p>
-            </div>
-          </Link>
-
-          <Link href="/health" className={styles.categoryCard}>
-            <img src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?q=80&w=1887&auto=format&fit=crop" className={styles.categoryImage} />
-            <div className={styles.categoryOverlay}>
-              <h3>Health</h3>
-              <p>Tips for a thriving kitty</p>
-            </div>
-          </Link>
-        </div>
-      </section>
+      {/* Breeds Section */}
+      <BreedsSection limit={4} />
 
       <AdContainer type="banner-728-90" />
+
+      {/* Shop Section */}
+      <ShopSection limit={4} />
+
+      <AdContainer type="banner-728-90" />
+
+      {/* Health Section */}
+      <HealthSection />
+
+      <AdminPanel />
+
+      <AdContainer type="banner-728-90" />
+
 
       {/* Features/Values Section */}
       <section className={styles.features}>
@@ -104,19 +97,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Hook / Newsletter Section */}
-      <section className={styles.newsletter}>
-        <div className={styles.newsletterBox}>
-          <div className={styles.newsletterContent}>
-            <h2>Join the <span>Pride</span></h2>
-            <p>Get exclusive cat care tips and product deals.</p>
-          </div>
-          <div className={styles.newsletterInput}>
-            <input type="email" placeholder="Enter your email" className={styles.inputField} />
-            <button className={styles.primaryBtn}>Subscribe</button>
-          </div>
-        </div>
-      </section>
+      {/* Contact Section */}
+      <ContactSection />
+
     </div>
   );
 }
