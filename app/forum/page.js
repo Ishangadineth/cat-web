@@ -165,22 +165,30 @@ export default function Forum() {
 
             if (post.authorId !== user.uid) {
                 const authorSnap = await getDoc(doc(db, "users", post.authorId));
-                const authorData = authorSnap.data();
-                const isMuted = authorData?.notificationSettings?.mutedUntil?.toDate() > new Date();
-                const isSilent = authorData?.notificationSettings?.silent;
+                if (authorSnap.exists()) {
+                    const authorData = authorSnap.data();
+                    const notifSettings = authorData?.notificationSettings || {};
+                    const isMuted = notifSettings.mutedUntil?.toDate
+                        ? notifSettings.mutedUntil.toDate() > new Date()
+                        : false;
+                    const isSilent = notifSettings.silent || false;
 
-                if (!isMuted && post.notificationSettings?.[post.authorId] !== false) {
-                    await addDoc(collection(db, "notifications"), {
-                        to: post.authorId,
-                        from: user.uid,
-                        fromName: user.username,
-                        postId: postId,
-                        postTitle: post.title || "your post",
-                        type: "comment",
-                        read: false,
-                        silent: isSilent,
-                        createdAt: serverTimestamp()
-                    });
+                    const postNotifSettings = post.notificationSettings || {};
+                    const isPostEnabled = postNotifSettings[post.authorId] !== false;
+
+                    if (!isMuted && isPostEnabled) {
+                        await addDoc(collection(db, "notifications"), {
+                            to: post.authorId,
+                            from: user.uid,
+                            fromName: user.username,
+                            postId: postId,
+                            postTitle: post.title || "your post",
+                            type: "comment",
+                            read: false,
+                            silent: isSilent,
+                            createdAt: serverTimestamp()
+                        });
+                    }
                 }
             }
 

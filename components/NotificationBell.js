@@ -20,20 +20,30 @@ export default function NotificationBell() {
         const q = query(
             collection(db, "notifications"),
             where("to", "==", user.uid),
-            orderBy("createdAt", "desc"),
-            limit(10)
+            limit(20)
         );
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            const notifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            let notifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // Sort in-memory to avoid index requirement
+            notifs.sort((a, b) => {
+                const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(0);
+                const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(0);
+                return dateB - dateA;
+            });
+
             setNotifications(notifs);
 
             const newUnreadCount = notifs.filter(n => !n.read).length;
 
             // Notification Sound Logic
             if (newUnreadCount > prevCountRef.current) {
-                const isSilent = user.notificationSettings?.silent;
-                const isMuted = user.notificationSettings?.mutedUntil?.toDate ? user.notificationSettings.mutedUntil.toDate() > new Date() : false;
+                const notifSettings = user.notificationSettings || {};
+                const isSilent = notifSettings.silent;
+                const isMuted = notifSettings.mutedUntil?.toDate
+                    ? notifSettings.mutedUntil.toDate() > new Date()
+                    : false;
 
                 if (!isSilent && !isMuted) {
                     const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3");
@@ -56,6 +66,16 @@ export default function NotificationBell() {
         }
     };
 
+    const handleMarkAllAsRead = async () => {
+        try {
+            const unread = notifications.filter(n => !n.read);
+            const promises = unread.map(n => updateDoc(doc(db, "notifications", n.id), { read: true }));
+            await Promise.all(promises);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     if (!user) return null;
 
     return (
@@ -66,7 +86,14 @@ export default function NotificationBell() {
 
             {isOpen && (
                 <div className={styles.dropdown}>
-                    <h4>Notifications</h4>
+                    <div className={styles.dropHeader}>
+                        <h4>Notifications</h4>
+                        {unreadCount > 0 && (
+                            <button onClick={handleMarkAllAsRead} className={styles.clearBtn}>
+                                Mark all as read
+                            </button>
+                        )}
+                    </div>
                     <div className={styles.list}>
                         {notifications.length === 0 ? <p className={styles.empty}>No notifications</p> : (
                             notifications.map(n => (

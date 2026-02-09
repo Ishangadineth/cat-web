@@ -52,12 +52,31 @@
     }
 }
 
-.dropdown h4 {
+.dropHeader {
     padding: 1rem;
     border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.dropHeader h4 {
     font-size: 1rem;
     margin: 0;
-    background: rgba(255, 255, 255, 0.02);
+}
+
+.clearBtn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+.clearBtn:hover {
+    text-decoration: underline;
 }
 
 .list {
