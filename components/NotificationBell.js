@@ -5,14 +5,18 @@ import { collection, query, where, onSnapshot, doc, updateDoc, orderBy, limit } 
 import { useAuth } from "@/context/AuthContext";
 import styles from "./NotificationBell.module.css";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function NotificationBell() {
     const { user } = useAuth();
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const [latestToast, setLatestToast] = useState(null);
 
     const prevCountRef = useRef(0);
+    const toastTimerRef = useRef(null);
 
     useEffect(() => {
         if (!user) return;
@@ -37,8 +41,17 @@ export default function NotificationBell() {
 
             const newUnreadCount = notifs.filter(n => !n.read).length;
 
-            // Notification Sound Logic
+            // Notification Sound & Toast Logic
             if (newUnreadCount > prevCountRef.current) {
+                const latest = notifs.find(n => !n.read);
+                if (latest) {
+                    setLatestToast(latest);
+                    setShowToast(true);
+
+                    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+                    toastTimerRef.current = setTimeout(() => setShowToast(false), 5000);
+                }
+
                 const notifSettings = user.notificationSettings || {};
                 const isSilent = notifSettings.silent;
                 const isMuted = notifSettings.mutedUntil?.toDate
@@ -55,7 +68,10 @@ export default function NotificationBell() {
             prevCountRef.current = newUnreadCount;
         });
 
-        return () => unsubscribe();
+        return () => {
+            unsubscribe();
+            if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+        };
     }, [user]);
 
     const markAsRead = async (id) => {
@@ -111,6 +127,34 @@ export default function NotificationBell() {
                     </div>
                 </div>
             )}
+
+            <AnimatePresence>
+                {showToast && latestToast && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20, x: 20 }}
+                        animate={{ opacity: 1, y: 0, x: 0 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        className={styles.toast}
+                        onClick={() => {
+                            setShowToast(false);
+                            markAsRead(latestToast.id);
+                        }}
+                    >
+                        <Link href="/forum" className={styles.toastContent}>
+                            <div className={styles.toastIcon}>💬</div>
+                            <div>
+                                <p><strong>{latestToast.fromName}</strong></p>
+                                <p className={styles.toastMsg}>Commented on your post</p>
+                            </div>
+                        </Link>
+                        <button className={styles.closeToast} onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setShowToast(false);
+                        }}>×</button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
