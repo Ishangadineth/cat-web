@@ -40,6 +40,7 @@ export default function RootLayout({ children }) {
           <CatExpertAI />
           <footer className="footer">
             <p>&copy; 2026 CatUniverse. Crafted for Cat Lovers.</p>
+            <p className="partner">Partnered with <a href="https://ishangadineth.online" target="_blank" rel="noopener noreferrer">ishangadineth.online</a></p>
           </footer>
         </AuthProvider>
       </body>

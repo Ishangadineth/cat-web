@@ -6,11 +6,13 @@ import styles from "./CatExpertAI.module.css";
 export default function CatExpertAI() {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { role: "assistant", content: "Meow! 🐾 I'm your Cat Expert AI. Ask me anything about cats, health, or our products!" }
+        { role: "assistant", content: "Meow! 🐾 I'm Goofy, your Cat Expert AI. Ask me anything about cats, health, or our products!" }
     ]);
     const [input, setInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const scrollRef = useRef(null);
+
+    const OPENAI_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -27,18 +29,31 @@ export default function CatExpertAI() {
         setInput("");
         setIsTyping(true);
 
-        // Simulated AI Response (Can be connected to OpenAI/Gemini later)
-        setTimeout(() => {
-            let response = "That's a great question! For specific health issues, I always recommend seeing a vet, but generally cats love high-protein diets and lots of vertical space! 🐱";
+        try {
+            const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${OPENAI_KEY}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo",
+                    messages: [
+                        { role: "system", content: "You are 'Goofy', an expert cat AI for the website 'CatUniverse'. Your personality is friendly and feline-like. IMPORTANT: You only answer questions related to cats (breeds, health, care, behavior) and the CatUniverse website (shop, forum, breeds section). If a user asks about anything else (e.g., math, history of other animals, programming, politics), politely decline and say you only talk about cat-related things. Keep answers helpful but concise." },
+                        ...messages.map(m => ({ role: m.role, content: m.content })),
+                        userMsg
+                    ]
+                })
+            });
 
-            const lowerInput = input.toLowerCase();
-            if (lowerInput.includes("food")) response = "Cats are obligate carnivores! Check out our Shop for premium grain-free food. 🍗";
-            if (lowerInput.includes("toy")) response = "Interactive laser toys and feather wands are great for keeping your cat active! 🎾";
-            if (lowerInput.includes("hello") || lowerInput.includes("hi")) response = "Meow! How can I help you and your feline friend today? 🐾";
-
-            setMessages(prev => [...prev, { role: "assistant", content: response }]);
-            setIsTyping(false);
-        }, 1500);
+            const data = await response.json();
+            const aiContent = data.choices[0].message.content;
+            setMessages(prev => [...prev, { role: "assistant", content: aiContent }]);
+        } catch (err) {
+            console.error(err);
+            setMessages(prev => [...prev, { role: "assistant", content: "Sorry, I'm feeling a bit sleepy (API error). Meow again later!" }]);
+        }
+        setIsTyping(false);
     };
 
     return (
@@ -53,9 +68,9 @@ export default function CatExpertAI() {
                     >
                         <div className={styles.header}>
                             <div className={styles.headerTitle}>
-                                <span>🐾</span>
+                                <span>😺</span>
                                 <div>
-                                    <h4>Cat Expert AI</h4>
+                                    <h4>Goofy (Cat Expert)</h4>
                                     <p>Online & Purring</p>
                                 </div>
                             </div>

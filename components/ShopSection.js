@@ -11,6 +11,14 @@ const ProductCard = ({ item }) => {
     const images = item.images && item.images.length > 0 ? item.images : [item.image];
     const [currentImage, setCurrentImage] = useState(0);
 
+    useEffect(() => {
+        if (images.length <= 1) return;
+        const interval = setInterval(() => {
+            setCurrentImage((prev) => (prev + 1) % images.length);
+        }, 3000); // Change image every 3 seconds
+        return () => clearInterval(interval);
+    }, [images.length]);
+
     const nextImage = (e) => {
         e.preventDefault();
         setCurrentImage((prev) => (prev + 1) % images.length);
