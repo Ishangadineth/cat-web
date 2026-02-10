@@ -43,7 +43,7 @@ export default function ContactSection() {
                         <p>Feel free to reach out to us. We typically respond within 24 hours.</p>
                         <div className={styles.item}>
                             <span>📧</span>
-                            <p>support@catuniverse.com</p>
+                            <p>contact@petgoofy.ishangadineth.online</p>
                         </div>
                         <div className={styles.item}>
                             <span>📍</span>
