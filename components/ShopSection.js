@@ -7,6 +7,69 @@ import { collection, query, onSnapshot, orderBy, addDoc, serverTimestamp } from 
 import AdContainer from "./AdContainer";
 import Link from "next/link";
 
+const ProductCard = ({ item }) => {
+    const images = item.images && item.images.length > 0 ? item.images : [item.image];
+    const [currentImage, setCurrentImage] = useState(0);
+
+    const nextImage = (e) => {
+        e.preventDefault();
+        setCurrentImage((prev) => (prev + 1) % images.length);
+    };
+
+    const prevImage = (e) => {
+        e.preventDefault();
+        setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
+    };
+
+    return (
+        <motion.div
+            layout
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className={styles.productCard}
+        >
+            <div className={styles.imageWrapper}>
+                <AnimatePresence mode="wait">
+                    <motion.img
+                        key={currentImage}
+                        src={images[currentImage]}
+                        alt={item.name}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className={styles.image}
+                    />
+                </AnimatePresence>
+
+                {images.length > 1 && (
+                    <>
+                        <button className={styles.prevBtn} onClick={prevImage}>‹</button>
+                        <button className={styles.nextBtn} onClick={nextImage}>›</button>
+                        <div className={styles.imageDots}>
+                            {images.map((_, i) => (
+                                <span key={i} className={i === currentImage ? styles.activeDot : ""} />
+                            ))}
+                        </div>
+                    </>
+                )}
+
+                <span className={`${styles.platformTag} ${styles[item.platform]}`}>
+                    {item.platform === 'amazon' ? 'Amazon' : 'AliExpress'}
+                </span>
+            </div>
+            <div className={styles.info}>
+                <h3>{item.name}</h3>
+                <p className={styles.price}>{item.price}</p>
+                <a href={item.link} className={styles.buyBtn} target="_blank" rel="noopener noreferrer">
+                    Buy on {item.platform === 'amazon' ? 'Amazon' : 'AliExpress'}
+                </a>
+            </div>
+        </motion.div>
+    );
+};
+
 export default function ShopSection({ limit = null }) {
     const [products, setProducts] = useState([]);
     const [filter, setFilter] = useState("all");
@@ -66,28 +129,7 @@ export default function ShopSection({ limit = null }) {
 
             <div className={styles.grid}>
                 {displayProducts.map((item, index) => (
-                    <motion.div
-                        key={item.id || index}
-                        layout
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3 }}
-                        className={styles.productCard}
-                    >
-                        <div className={styles.imageWrapper}>
-                            <img src={item.image} alt={item.name} className={styles.image} />
-                            <span className={`${styles.platformTag} ${styles[item.platform]}`}>
-                                {item.platform === 'amazon' ? 'Amazon' : 'AliExpress'}
-                            </span>
-                        </div>
-                        <div className={styles.info}>
-                            <h3>{item.name}</h3>
-                            <p className={styles.price}>{item.price}</p>
-                            <a href={item.link} className={styles.buyBtn} target="_blank" rel="noopener noreferrer">
-                                Buy on {item.platform === 'amazon' ? 'Amazon' : 'AliExpress'}
-                            </a>
-                        </div>
-                    </motion.div>
+                    <ProductCard key={item.id || index} item={item} />
                 ))}
             </div>
 
@@ -104,3 +146,4 @@ export default function ShopSection({ limit = null }) {
         </section>
     );
 }
+

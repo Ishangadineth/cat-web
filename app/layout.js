@@ -4,6 +4,7 @@ import Script from "next/script";
 import { AuthProvider } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 import AdManager from "@/components/AdManager";
+import CatExpertAI from "@/components/CatExpertAI";
 
 const outfit = Outfit({ subsets: ["latin"] });
 export const metadata = {
@@ -36,6 +37,7 @@ export default function RootLayout({ children }) {
           <AdManager />
           <Navbar />
           <main>{children}</main>
+          <CatExpertAI />
           <footer className="footer">
             <p>&copy; 2026 CatUniverse. Crafted for Cat Lovers.</p>
           </footer>
