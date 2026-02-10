@@ -166,6 +166,102 @@
     text-align: center;
 }
 
+.imageSection {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.imageSection h4 {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.imageInputRow {
+    position: relative;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.inputFlex {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.inputFlex input {
+    flex: 1;
+}
+
+.inputFlex span {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.fileLabel {
+    padding: 0.8rem 1.2rem;
+    background: var(--secondary);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    transition: 0.3s;
+}
+
+.fileLabel:hover {
+    background: var(--primary);
+    color: #000;
+}
+
+.removeImgBtn {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    width: 24px;
+    height: 24px;
+    background: #e62e04;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.addImgBtn {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed var(--border);
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.addImgBtn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.fileName {
+    font-size: 0.8rem;
+    color: #4CAF50;
+    margin-top: 5px;
+}
+
+.imgCount {
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
 @media (max-width: 1024px) {
     .adminContainer {
         grid-template-columns: 1fr;

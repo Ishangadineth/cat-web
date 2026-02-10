@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import styles from "./AdminPanel.module.css";
 import { useAuth } from "@/context/AuthContext";
 
@@ -11,11 +12,12 @@ export default function AdminPanel() {
     const [product, setProduct] = useState({
         name: "",
         price: "",
-        image: "",
+        images: [""],
         link: "",
         platform: "amazon",
         category: ""
     });
+    const [imageFiles, setImageFiles] = useState({});
     const [editingId, setEditingId] = useState(null);
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState(null);
@@ -32,23 +34,66 @@ export default function AdminPanel() {
         return () => unsubscribe();
     }, [isAdmin]);
 
+    const handleAddImageField = () => {
+        if (product.images.length < 10) {
+            setProduct({ ...product, images: [...product.images, ""] });
+        }
+    };
+
+    const handleRemoveImageField = (index) => {
+        const newImages = [...product.images];
+        newImages.splice(index, 1);
+        const newFiles = { ...imageFiles };
+        delete newFiles[index];
+        setProduct({ ...product, images: newImages });
+        setImageFiles(newFiles);
+    };
+
+    const handleFileChange = (index, file) => {
+        if (!file) return;
+        setImageFiles({ ...imageFiles, [index]: file });
+        const newImages = [...product.images];
+        newImages[index] = "file_upload:" + file.name;
+        setProduct({ ...product, images: newImages });
+    };
+
+    const uploadAllFiles = async () => {
+        const finalUrls = [...product.images];
+        for (const index in imageFiles) {
+            const file = imageFiles[index];
+            const storageRef = ref(storage, `products/${Date.now()}_${file.name}`);
+            const snapshot = await uploadBytes(storageRef, file);
+            const url = await getDownloadURL(snapshot.ref);
+            finalUrls[index] = url;
+        }
+        return finalUrls.filter(url => url && !url.startsWith("file_upload:"));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setStatus(null);
         try {
+            const finalizedImages = await uploadAllFiles();
+            const productData = {
+                ...product,
+                images: finalizedImages,
+                image: finalizedImages[0] || ""
+            };
+
             if (editingId) {
-                await updateDoc(doc(db, "products", editingId), product);
+                await updateDoc(doc(db, "products", editingId), productData);
                 setStatus("success_updated");
                 setEditingId(null);
             } else {
                 await addDoc(collection(db, "products"), {
-                    ...product,
+                    ...productData,
                     createdAt: serverTimestamp()
                 });
                 setStatus("success_added");
             }
-            setProduct({ name: "", price: "", image: "", link: "", platform: "amazon", category: "" });
+            setProduct({ name: "", price: "", images: [""], link: "", platform: "amazon", category: "" });
+            setImageFiles({});
         } catch (err) {
             console.error(err);
             setStatus("error");
@@ -60,12 +105,13 @@ export default function AdminPanel() {
         setProduct({
             name: p.name,
             price: p.price,
-            image: p.image,
-            link: p.link,
+            images: p.images || [p.image] || [""],
+            link: p.link || "",
             platform: p.platform || "amazon",
             category: p.category || ""
         });
         setEditingId(p.id);
+        setImageFiles({});
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -98,12 +144,41 @@ export default function AdminPanel() {
                         onChange={(e) => setProduct({ ...product, price: e.target.value })}
                         required
                     />
-                    <input
-                        placeholder="Image URL"
-                        value={product.image}
-                        onChange={(e) => setProduct({ ...product, image: e.target.value })}
-                        required
-                    />
+                    <div className={styles.imageSection}>
+                        <h4>Images ({product.images.length}/10)</h4>
+                        {product.images.map((img, idx) => (
+                            <div key={idx} className={styles.imageInputRow}>
+                                <div className={styles.inputFlex}>
+                                    <input
+                                        placeholder="Image URL"
+                                        value={img.startsWith("file_upload:") ? "" : img}
+                                        onChange={(e) => {
+                                            const nextImages = [...product.images];
+                                            nextImages[idx] = e.target.value;
+                                            setProduct({ ...product, images: nextImages });
+                                        }}
+                                        disabled={img.startsWith("file_upload:")}
+                                    />
+                                    <span>OR</span>
+                                    <label className={styles.fileLabel}>
+                                        📁 Upload
+                                        <input
+                                            type="file"
+                                            hidden
+                                            onChange={(e) => handleFileChange(idx, e.target.files[0])}
+                                        />
+                                    </label>
+                                </div>
+                                {img.startsWith("file_upload:") && <p className={styles.fileName}>Selected: {img.replace("file_upload:", "")}</p>}
+                                {product.images.length > 1 && (
+                                    <button type="button" onClick={() => handleRemoveImageField(idx)} className={styles.removeImgBtn}>×</button>
+                                )}
+                            </div>
+                        ))}
+                        {product.images.length < 10 && (
+                            <button type="button" onClick={handleAddImageField} className={styles.addImgBtn}>+ Add More Images</button>
+                        )}
+                    </div>
                     <input
                         placeholder="Affiliate Link"
                         value={product.link}
@@ -142,13 +217,14 @@ export default function AdminPanel() {
                         {editingId && (
                             <button type="button" onClick={() => {
                                 setEditingId(null);
-                                setProduct({ name: "", price: "", image: "", link: "", platform: "amazon", category: "" });
+                                setProduct({ name: "", price: "", images: [""], link: "", platform: "amazon", category: "" });
+                                setImageFiles({});
                             }} className={styles.cancelBtn}>Cancel Edit</button>
                         )}
                     </div>
                     {status === "success_added" && <p className={styles.msgS}>Added successfully!</p>}
                     {status === "success_updated" && <p className={styles.msgS}>Updated successfully!</p>}
-                    {status === "error" && <p className={styles.msgE}>Error occurred.</p>}
+                    {status === "error" && <p className={styles.msgE}>Error occurred during save.</p>}
                 </form>
             </div>
 
@@ -157,10 +233,11 @@ export default function AdminPanel() {
                 <div className={styles.prodList}>
                     {products.map(p => (
                         <div key={p.id} className={styles.prodItem}>
-                            <img src={p.image} alt={p.name} />
+                            <img src={p.images?.[0] || p.image} alt={p.name} />
                             <div className={styles.prodInfo}>
                                 <h4>{p.name}</h4>
                                 <p>{p.platform} - {p.price}</p>
+                                <p className={styles.imgCount}>{p.images?.length || 1} Images</p>
                             </div>
                             <div className={styles.actions}>
                                 <button onClick={() => handleEdit(p)} className={styles.editBtn}>Edit</button>
