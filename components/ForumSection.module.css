@@ -1,0 +1,120 @@
+.forumSection {
+    padding: 8rem 10%;
+    background: var(--background);
+}
+
+.sectionHeader {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.sectionHeader h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.sectionHeader span {
+    color: var(--primary);
+}
+
+.postsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.postCard {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    transition: 0.3s;
+}
+
+.postCard:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+.postLink {
+    text-decoration: none;
+    color: inherit;
+    padding: 2rem;
+    display: block;
+}
+
+.postHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+}
+
+.author {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.date {
+    color: var(--text-muted);
+}
+
+.postCard h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.postCard p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.postFooter {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+}
+
+.viewMoreContainer {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.viewMoreBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1rem 2.5rem;
+    background: var(--primary);
+    color: #000;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.viewMoreBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px var(--primary-glow);
+}
+
+.loading,
+.empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+    .forumSection {
+        padding: 5rem 5%;
+    }
+}

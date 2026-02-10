@@ -1,12 +1,21 @@
-.adminBox {
-    background: var(--card-bg);
-    border: 2px dashed var(--primary);
-    padding: 2rem;
-    border-radius: 1.5rem;
-    margin-bottom: 3rem;
+.adminContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
 }
 
-.adminBox h3 {
+.adminBox,
+.manageBox {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    border-radius: 2rem;
+    height: fit-content;
+}
+
+.adminBox h3,
+.manageBox h3 {
     margin-bottom: 1.5rem;
     color: var(--primary);
 }
@@ -18,48 +27,147 @@
 }
 
 .adminBox input {
-    padding: 0.8rem 1rem;
+    padding: 1rem;
     background: var(--secondary);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 12px;
     color: #fff;
     outline: none;
+    font-size: 0.95rem;
 }
 
 .platformSelector {
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
+    background: var(--secondary);
     padding: 0.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
 }
 
 .platformSelector label {
+    flex: 1;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
-    font-size: 0.9rem;
+    padding: 0.8rem;
+    border-radius: 8px;
     cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.9rem;
 }
 
-.adminBox button {
+.activeLabel {
+    background: var(--primary);
+    color: #000;
+    font-weight: 700;
+}
+
+.btnRow {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.submitBtn {
+    flex: 2;
     padding: 1rem;
     background: var(--primary);
     border: none;
-    border-radius: 8px;
+    border-radius: 50px;
     font-weight: 700;
     cursor: pointer;
-    transition: 0.3s;
 }
 
-.adminBox button:hover {
-    opacity: 0.9;
+.cancelBtn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    color: #fff;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.manageBox {
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.prodList {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 10px;
+}
+
+.prodItem {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.prodItem img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.prodInfo {
+    flex: 1;
+}
+
+.prodInfo h4 {
+    font-size: 0.95rem;
+    margin-bottom: 3px;
+}
+
+.prodInfo p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.editBtn,
+.deleteBtn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border: none;
+}
+
+.editBtn {
+    background: #4a90e2;
+    color: #fff;
+}
+
+.deleteBtn {
+    background: #e62e04;
+    color: #fff;
 }
 
 .msgS {
     color: #4CAF50;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    text-align: center;
 }
 
 .msgE {
     color: #ff4d4d;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+@media (max-width: 1024px) {
+    .adminContainer {
+        grid-template-columns: 1fr;
+    }
 }

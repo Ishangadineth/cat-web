@@ -9,6 +9,7 @@ import ContactSection from "@/components/ContactSection";
 import AdminPanel from "@/components/AdminPanel";
 import HealthSection from "@/components/HealthSection";
 import HistorySection from "@/components/HistorySection";
+import ForumSection from "@/components/ForumSection";
 
 export default function Home() {
   return (
@@ -30,6 +31,7 @@ export default function Home() {
           </p>
           <div className={styles.ctaButtons}>
             <Link href="/breeds" className={styles.primaryBtn}>Explore Breeds</Link>
+            <Link href="/#forum-preview" className={styles.secondaryBtn}>Forum</Link>
             <Link href="/shop" className={styles.secondaryBtn}>Shop Favorites</Link>
           </div>
         </motion.div>
@@ -58,6 +60,11 @@ export default function Home() {
 
       {/* Breeds Section */}
       <BreedsSection limit={4} />
+
+      <AdContainer type="banner-728-90" />
+
+      {/* Forum Section */}
+      <ForumSection displayLimit={3} />
 
       <AdContainer type="banner-728-90" />
 

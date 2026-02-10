@@ -18,7 +18,7 @@ export default function Navbar() {
 
                 <ul className={`${styles.navLinks} ${isMenuOpen ? styles.active : ''}`}>
                     <li><Link href="/" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
-                    <li><Link href="/forum" onClick={() => setIsMenuOpen(false)}>Forum</Link></li>
+                    <li><Link href="/#forum-preview" onClick={() => setIsMenuOpen(false)}>Forum</Link></li>
                     <li><Link href="/#history" onClick={() => setIsMenuOpen(false)}>History</Link></li>
                     <li><Link href="/#breeds" onClick={() => setIsMenuOpen(false)}>Breeds</Link></li>
                     <li><Link href="/#health" onClick={() => setIsMenuOpen(false)}>Health</Link></li>
