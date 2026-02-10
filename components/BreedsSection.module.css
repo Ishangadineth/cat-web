@@ -1,0 +1,86 @@
+.breeds {
+    padding: 8rem 10%;
+    background: var(--background);
+}
+
+.sectionHeader {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.sectionHeader h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.sectionHeader span {
+    color: var(--primary);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.breedCard {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.breedCard:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+.imageWrapper {
+    height: 250px;
+    overflow: hidden;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.5s;
+}
+
+.breedCard:hover .image {
+    transform: scale(1.1);
+}
+
+.info {
+    padding: 2rem;
+}
+
+.info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.origin {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    background: rgba(255, 107, 107, 0.1);
+    color: var(--primary);
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.info p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .breeds {
+        padding: 5rem 5%;
+    }
+}
